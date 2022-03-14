@@ -4,20 +4,56 @@ const {faker} = require('@faker-js/faker');
 
 const axios = require('axios');
 
-const {getProgramPodcasts} = require('../../Util/PodcastClient')
+const {
+    getProgramPodcasts,
+    getPodcastDetails
+} = require('../../Util/PodcastClient')
 
-describe('PodcastsClientUnitTest', async () => {
-    let axiosGet;
+function getCredentials(sessionId = null, profileId = null) {
+    if (sessionId === null) {
+        sessionId = faker.datatype.string(9);
+    }
+    if (profileId === null) {
+        profileId = faker.datatype.string(9);
+    }
 
-    beforeEach(() => {
-        axiosGet = sinon.stub(axios, 'get');
-    });
+    return {
+        sessionId,
+        profileId
+    };
+}
 
-    afterEach(() => {
-        axiosGet.restore();
-    });
+function configureAxiosToReturnGoodResponse(axios, data = {}) {
+    const response = {
+        status: 200,
+        statusText: 'OK',
+        data
+    };
 
+    axios.resolves(response);
+}
+
+function configureAxiosToReturnBadResponse(axios) {
+    const response = {
+        status: 400,
+        statusText: 'Bad Request'
+    };
+
+    axios.resolves(response);
+}
+
+describe('PodcastsClientUnitTest', () => {
     describe('getProgramPodcasts', () => {
+        let axiosGet;
+
+        beforeEach(() => {
+            axiosGet = sinon.stub(axios, 'get');
+        });
+
+        afterEach(() => {
+            axiosGet.restore();
+        });
+
         it('makes get request to iheart podcasts endpoint',  async () => {
             const program_id = faker.datatype.number();
             const expected_url = `https://us.api.iheart.com/api/v3/podcast/podcasts/${program_id}/episodes`
@@ -83,6 +119,114 @@ describe('PodcastsClientUnitTest', async () => {
             assert.equal(podcasts, fakeData, 'getProgramPodcasts returns data when successful');
         });
     });
-});
 
-// https://us.api.iheart.com/api/v3/podcast/podcasts/{}/episodes
+    describe('getPodcastDetails', () => {
+        let axiosPost;
+
+        beforeEach(() => {
+            axiosPost = sinon.stub(axios, 'post');
+        });
+
+        afterEach(() => {
+            axiosPost.restore();
+        });
+
+        it('makes post request to iheart streams endpoint', async () => {
+            const expected_url = 'https://us.api.iheart.com/api/v2/playback/streams';
+            configureAxiosToReturnGoodResponse(axiosPost);
+
+            await getPodcastDetails([1,2,3], getCredentials());
+
+            assert.isTrue(axiosPost.calledOnce, 'makes only one post request');
+            assert.isAtLeast(axiosPost.args[0].length, 1, 'supplies url to post call');
+            assert.equal(axiosPost.args[0][0], expected_url, 'makes post call to iheart steams url');
+        });
+
+        it('identifies itself with credentials', async () => {
+            const sessionId = faker.datatype.string(9);
+            const profileId = faker.datatype.string(9);
+            configureAxiosToReturnGoodResponse(axiosPost);
+
+            await getPodcastDetails([1,2,3], getCredentials(sessionId, profileId));
+
+            assert.isAtLeast(axiosPost.args[0].length, 3, 'post call supplies config parameter');
+            assert.exists(axiosPost.args[0][2].headers, 'post call supplies headers in config');
+
+            const headers = axiosPost.args[0][2].headers;
+            assert.equal(headers['X-Session-Id'], sessionId, 'post call supplies session id');
+            assert.equal(headers['X-User-Id'], profileId, 'post call supplies profile id via user id header');
+        });
+
+        it('supplies data to endpoint', async () => {
+            configureAxiosToReturnGoodResponse(axiosPost);
+
+            await getPodcastDetails([1,2,3], getCredentials());
+
+            assert.isAtLeast(axiosPost.args[0].length, 2, 'post call supplies data to endpoint');
+
+            const data = axiosPost.args[0][1];
+            assert.equal(data.hostName, 'webapp.US', 'post call supplies data to endpoint');
+            assert.equal(data.playedFrom, '514', 'post call supplies data to endpoint');
+            assert.equal(data.stationId, '20635765', 'post call supplies data to endpoint');
+            assert.equal(data.stationType, 'PODCAST', 'post call supplies data to endpoint');
+        });
+
+        it('supplies multiple podcast ids to endpoint', async () => {
+            const podcast_ids = [1, 2, 3];
+            configureAxiosToReturnGoodResponse(axiosPost);
+
+            await getPodcastDetails(podcast_ids, getCredentials());
+
+            assert.isAtLeast(axiosPost.args[0].length, 2, 'post call supplies data to endpoint');
+
+            const data = axiosPost.args[0][1];
+            assert.equal(data.contentIds, podcast_ids, 'post call supplies data to endpoint');
+        });
+
+        it('supplies a single podcast id to endpoint', async () => {
+            const podcast_id = faker.datatype.number();
+            configureAxiosToReturnGoodResponse(axiosPost);
+
+            await getPodcastDetails(podcast_id, getCredentials());
+
+            const data = axiosPost.args[0][1];
+            assert.deepEqual(data.contentIds, [podcast_id], 'post call supplies podcast id to endpoint as array');
+        });
+
+        it ('throws exception when given empty array for podcast ids', async () => {
+            let caughtException = null;
+            try {
+                await getPodcastDetails([], {});
+            } catch (error) {
+                caughtException = error;
+            }
+
+            assert.isNotNull(caughtException, 'throws exception when given empty array');
+        });
+
+        it('throws exception when receiving http error from endpoint', async () => {
+            configureAxiosToReturnBadResponse(axiosPost);
+
+            let caughtException = null;
+            try {
+                await getPodcastDetails([1, 2, 3], getCredentials());
+            } catch (error) {
+                caughtException = error;
+            }
+
+            assert.isNotNull(caughtException, 'throws exception when receiving http error');
+        });
+
+        it('returns data when successful', async () => {
+            const data = {
+                key1: 'value1',
+                key2: 'value2'
+            };
+            configureAxiosToReturnGoodResponse(axiosPost, data);
+
+            const details = await getPodcastDetails([1, 2, 3], getCredentials());
+
+            assert.deepEqual(details, data, 'returns data when successful');
+        });
+    });
+});
