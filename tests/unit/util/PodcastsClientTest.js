@@ -7,7 +7,7 @@ const axios = require('axios');
 const {
     getProgramPodcasts,
     getPodcastDetails
-} = require('../../Util/PodcastClient')
+} = require('../../../Util/PodcastClient')
 
 function getCredentials(sessionId = null, profileId = null) {
     if (sessionId === null) {

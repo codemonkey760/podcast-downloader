@@ -1,5 +1,5 @@
 const { assert } = require('chai')
-const { createUser } = require('../../Util/AuthClient');
+const { createUser } = require('../../../Util/AuthClient');
 
 describe('AuthClientExternalTests', async () => {
     describe('createUser', async () => {

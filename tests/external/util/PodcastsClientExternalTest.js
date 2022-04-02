@@ -1,5 +1,5 @@
-const {createUser} = require('../../Util/AuthClient');
-const {getProgramPodcasts, getPodcastDetails} = require('../../Util/PodcastClient');
+const {createUser} = require('../../../Util/AuthClient');
+const {getProgramPodcasts, getPodcastDetails} = require('../../../Util/PodcastClient');
 
 const programIdForTest = '20635765'; // The John and Ken show
 
