@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import DownloadOneJKButton from "./Components/DownloadOneJKButton";
+import { StyleSheet, View } from 'react-native';
+import PodcastList from './Components/PodcastList';
+
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <DownloadOneJKButton />
+      <PodcastList />
       <StatusBar style="auto" />
     </View>
   );
