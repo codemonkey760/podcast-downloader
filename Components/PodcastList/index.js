@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { RefreshControl } from 'react-native';
 import PodcastListItem from "../PodcastListItem";
-import RefreshButton from '../RefreshButton';
-import  {StyledPodcastList } from './styles';
+import  { StyledPodcastScrollView } from './styles';
 
 import { getPodcastsForProgram } from '../../Helpers/PodcastHelper';
 
@@ -9,39 +9,31 @@ export default function PodcastList() {
     const [podcastList, setPodcastList] = useState([]);
     const [isRefreshingList, setIsRefreshingList] = useState(false);
 
-    const refreshButtonPressHandler = async () => {
-        setIsRefreshingList(true);
+    const onRefresh = useCallback(
+        async () => {
+            setIsRefreshingList(true);
 
-        const jkId = 20635765;
-        const jkLimit = 20;
+            const jkId = 20635765;
+            const jkLimit = 4;
 
-        const newPodcastsItems = await getPodcastsForProgram(jkId, jkLimit);
+            const newPodcastsItems = await getPodcastsForProgram(jkId, jkLimit);
 
-        setPodcastList(
-            newPodcastsItems
-        );
+            setPodcastList(
+                newPodcastsItems
+            );
 
-        setIsRefreshingList(false);
-    };
+            setIsRefreshingList(false);
+        },
+        []
+    );
 
-    const renderPodcastList = () => {
-        const listItems = podcastList.map((podcast) => PodcastListItem(podcast));
+    const listItems = podcastList.map((podcast) => PodcastListItem(podcast));
 
-        return (
-            <StyledPodcastList>
-                {listItems}
-            </StyledPodcastList>
-        );
-    };
-
-    const renderRefreshButton = () => {
-        return (
-            <RefreshButton
-                disabled={isRefreshingList}
-                onPress={refreshButtonPressHandler}
-            />
-        );
-    }
-
-    return (podcastList.length > 1) ? renderPodcastList() : renderRefreshButton();
+    return (
+        <StyledPodcastScrollView
+            refreshControl={<RefreshControl refreshing={isRefreshingList} onRefresh={onRefresh} />}
+        >
+            {listItems}
+        </StyledPodcastScrollView>
+    );
 }

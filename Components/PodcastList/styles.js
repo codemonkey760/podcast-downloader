@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
 
-export const StyledPodcastList = styled.ScrollView`
+export const StyledPodcastScrollView = styled.ScrollView`
   margin-top: 25px;
   width: 100%;
   flex: 1;
