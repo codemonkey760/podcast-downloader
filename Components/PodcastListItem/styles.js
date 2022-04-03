@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
 
-export const PodcastListItemDiv = styled.View`
+export const PodcastListItemView = styled.View`
   max-height: 70px;
   flex: 1;
   flex-direction: row;

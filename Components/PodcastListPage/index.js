@@ -5,7 +5,7 @@ import  { StyledPodcastScrollView } from './styles';
 
 import { getPodcastsForProgram } from '../../Helpers/PodcastHelper';
 
-export default function PodcastList() {
+export default function PodcastListPage({ navigation }) {
     const [podcastList, setPodcastList] = useState([]);
     const [isRefreshingList, setIsRefreshingList] = useState(false);
 
@@ -27,7 +27,11 @@ export default function PodcastList() {
         []
     );
 
-    const listItems = podcastList.map((podcast) => PodcastListItem(podcast));
+    const onPodcastPress = () => {
+        navigation.navigate('PodcastViewPage');
+    }
+
+    const listItems = podcastList.map((podcast) => PodcastListItem({podcast, onPress: onPodcastPress}));
 
     return (
         <StyledPodcastScrollView
