@@ -23,7 +23,6 @@ const PodcastListPage = ({ navigation, selectedProgramId, podcastList, refreshPo
         async () => {
             setIsRefreshingList(true);
 
-            console.log('SELECT PROGRAM ID FOR REFRESH ', selectedProgramId);
             const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, 4);
             refreshPodcastList(selectedProgramId, newPodcastsItems);
 
