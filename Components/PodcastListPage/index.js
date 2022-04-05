@@ -32,7 +32,7 @@ const PodcastListPage = ({ navigation, selectedProgramId, podcastList, refreshPo
     );
 
     const onPodcastPress = () => {
-        navigation.navigate('PodcastViewPage');
+
     }
 
     const listItems = podcastList.map((podcast) => PodcastListItem({podcast, onPress: onPodcastPress}));
