@@ -9,14 +9,19 @@ import { getSelectedProgramId } from '../../selectors/program';
 import { getPodcastListForProgram } from '../../selectors/podcastList';
 
 // actions
-import { refreshPodcastList } from '../../actions/podcastListActions';
+import {
+    refreshPodcastList,
+    startPodcastDownload,
+    updatePodcastDownload,
+    finishPodcastDownload
+} from '../../actions/podcastListActions';
 
 // locals
 import PodcastListItem from "../PodcastListItem";
 import  { StyledPodcastScrollView } from './styles';
 import { getPodcastsForProgram } from '../../Helpers/PodcastHelper';
 
-const PodcastListPage = ({ navigation, selectedProgramId, podcastList, refreshPodcastList }) => {
+const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList }) => {
     const [isRefreshingList, setIsRefreshingList] = useState(false);
 
     const onRefresh = useCallback(
@@ -31,11 +36,13 @@ const PodcastListPage = ({ navigation, selectedProgramId, podcastList, refreshPo
         []
     );
 
-    const onPodcastPress = () => {
+    const listItems = podcastList.map((podcast) => PodcastListItem({
+        podcast, onPress: () => {
+            startPodcastDownload(podcast.id);
 
-    }
-
-    const listItems = podcastList.map((podcast) => PodcastListItem({podcast, onPress: onPodcastPress}));
+            console.log('downloading podcast: ' + podcast.id);
+        }
+    }));
 
     return (
         <StyledPodcastScrollView
@@ -58,6 +65,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => (
     bindActionCreators({
         refreshPodcastList,
+        startPodcastDownload,
+        updatePodcastDownload,
+        finishPodcastDownload
     }, dispatch)
 );
 
