@@ -20,6 +20,7 @@ import {
 import PodcastListItem from "../PodcastListItem";
 import  { StyledPodcastScrollView } from './styles';
 import { getPodcastsForProgram } from '../../Helpers/PodcastHelper';
+import downloadPodcast from '../../Helpers/Downloader';
 
 const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList }) => {
     const [isRefreshingList, setIsRefreshingList] = useState(false);
@@ -37,10 +38,28 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
     );
 
     const listItems = podcastList.map((podcast) => PodcastListItem({
-        podcast, onPress: () => {
+        podcast, onPress: async () => {
             startPodcastDownload(podcast.id);
-
             console.log('downloading podcast: ' + podcast.id);
+
+            const progressCallback = downloadProgress => {
+                console.log(
+                    `Downloading: ${downloadProgress.totalBytesWritten} / ${downloadProgress.totalBytesExpectedToWrite}`
+                );
+            };
+
+            const done = fileName => {
+                console.log(`Download to '${fileName}' completed`);
+            };
+
+            const error = e => {
+                console.log('An error occurred')
+                console.log(JSON.stringify(e));
+            };
+
+            await downloadPodcast(podcast.id, progressCallback, done, error);
+
+            finishPodcastDownload(podcast.id);
         }
     }));
 

@@ -1,6 +1,6 @@
+require('react-native-get-random-values');
 const { v4: uuidv4 } = require('uuid');
-const { URLSearchParams } = require('url');
-const axios = require('axios');
+const axios = require('axios').default;
 
 async function createUser() {
     let deviceId = uuidv4();
@@ -14,25 +14,33 @@ async function createUser() {
         'Host': 'us.api.iheart.com',
     }
 
-    let data = new URLSearchParams({
-        'accessToken': 'anon',
-        'accessTokenType': 'anon',
-        'deviceId' : deviceId,
-        'deviceName': 'web-desktop',
-        'host': 'webapp.US',
-        'oauthUuid': oauthUuid,
-        'userName': userName,
-    });
+    let data = new URLSearchParams();
+    data.append('accessToken', 'anon');
+    data.append('accessTokenType', 'anon');
+    data.append('deviceId', deviceId);
+    data.append('deviceName', 'web-desktop');
+    data.append('host', 'webapp.US');
+    data.append('oauthUuid', oauthUuid);
+    data.append('userName', userName);
 
     const url = 'https://us.api.iheart.com/api/v1/account/loginOrCreateOauthUser';
 
-    let response = await axios.post(url, data, {headers})
+    const axiosInstance = axios.create();
+    axiosInstance.interceptors.request.use(config => {
+        console.log('Request Logging Axios Interceptor:');
+        console.log(JSON.stringify(config));
+    });
 
-    if (response.status >= 400) {
-        throw new Error(`Http error ${response.status}: ${response.statusText}`);
+    try {
+        let response = await axiosInstance.post(url, data, {headers})
+
+        return response.data;
+    } catch (e) {
+        console.error('An HTTP error occurred');
+        console.log(e.response.status);
+
+        throw e;
     }
-
-    return response.data;
 }
 
 module.exports = { createUser };
