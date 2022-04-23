@@ -1,6 +1,6 @@
-require('react-native-get-random-values');
-const { v4: uuidv4 } = require('uuid');
-const axios = require('axios').default;
+import 'react-native-get-random-values'
+import { v4 as uuidv4 } from 'uuid'
+import axios from 'axios'
 
 async function createUser() {
     let deviceId = uuidv4();
@@ -25,20 +25,11 @@ async function createUser() {
 
     const url = 'https://us.api.iheart.com/api/v1/account/loginOrCreateOauthUser';
 
-    const axiosInstance = axios.create();
-    axiosInstance.interceptors.request.use(config => {
-        console.log('Request Logging Axios Interceptor:');
-        console.log(JSON.stringify(config));
-    });
-
     try {
-        let response = await axiosInstance.post(url, data, {headers})
+        let response = await axios.post(url, data, {headers})
 
         return response.data;
     } catch (e) {
-        console.error('An HTTP error occurred');
-        console.log(e.response.status);
-
         throw e;
     }
 }
