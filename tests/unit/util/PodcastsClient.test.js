@@ -130,35 +130,47 @@ describe('PodcastsClientUnitTest', () => {
 
             await getPodcastDetails([1,2,3], getCredentials());
 
-            assert.isAtLeast(axiosPost.args[0].length, 2, 'post call supplies data to endpoint');
+            expect(axios.post.mock.calls.length).toBe(1)
+            expect(axios.post.mock.calls[0].length).toBeGreaterThanOrEqual(2)
+            expect(axios.post.mock.calls[0][1]).toBeInstanceOf(Object)
 
-            const data = axiosPost.args[0][1];
-            assert.equal(data.hostName, 'webapp.US', 'post call supplies data to endpoint');
-            assert.equal(data.playedFrom, '514', 'post call supplies data to endpoint');
-            assert.equal(data.stationId, '20635765', 'post call supplies data to endpoint');
-            assert.equal(data.stationType, 'PODCAST', 'post call supplies data to endpoint');
+            const data = axios.post.mock.calls[0][1]
+            expect(data).toHaveProperty('hostName')
+            expect(data['hostName']).toBe('webapp.US')
+            expect(data).toHaveProperty('playedFrom')
+            expect(data['playedFrom']).toBe('514')
+            expect(data).toHaveProperty('stationId')
+            expect(data['stationId']).toBe('20635765')
+            expect(data).toHaveProperty('stationType')
+            expect(data['stationType']).toBe('PODCAST')
         });
 
         it('supplies multiple podcast ids to endpoint', async () => {
             const podcast_ids = [1, 2, 3];
-            configureAxiosToReturnGoodResponse(axiosPost);
+            configureAxiosToReturnGoodResponse(axios.post);
 
             await getPodcastDetails(podcast_ids, getCredentials());
 
-            assert.isAtLeast(axiosPost.args[0].length, 2, 'post call supplies data to endpoint');
+            expect(axios.post.mock.calls.length).toBe(1)
+            expect(axios.post.mock.calls[0].length).toBeGreaterThanOrEqual(2)
 
-            const data = axiosPost.args[0][1];
-            assert.equal(data.contentIds, podcast_ids, 'post call supplies data to endpoint');
+            const data = axios.post.mock.calls[0][1]
+            expect(data).toHaveProperty('contentIds')
+            expect(data.contentIds).toBe(podcast_ids);
         });
 
         it('supplies a single podcast id to endpoint', async () => {
             const podcast_id = faker.datatype.number();
-            configureAxiosToReturnGoodResponse(axiosPost);
+            configureAxiosToReturnGoodResponse(axios.post);
 
             await getPodcastDetails(podcast_id, getCredentials());
 
-            const data = axiosPost.args[0][1];
-            assert.deepEqual(data.contentIds, [podcast_id], 'post call supplies podcast id to endpoint as array');
+            expect(axios.post.mock.calls.length).toBe(1)
+            expect(axios.post.mock.calls[0].length).toBeGreaterThanOrEqual(2)
+
+            const data = axios.post.mock.calls[0][1]
+            expect(data).toHaveProperty('contentIds')
+            expect(data.contentIds).toStrictEqual([podcast_id])
         });
 
         it ('throws exception when given empty array for podcast ids', async () => {
@@ -169,11 +181,11 @@ describe('PodcastsClientUnitTest', () => {
                 caughtException = error;
             }
 
-            assert.isNotNull(caughtException, 'throws exception when given empty array');
+            expect(caughtException).not.toBeNull()
         });
 
         it('throws exception when receiving http error from endpoint', async () => {
-            configureAxiosToReturnBadResponse(axiosPost);
+            configureAxiosToReturnBadResponse(axios.post);
 
             let caughtException = null;
             try {
@@ -182,7 +194,7 @@ describe('PodcastsClientUnitTest', () => {
                 caughtException = error;
             }
 
-            assert.isNotNull(caughtException, 'throws exception when receiving http error');
+            expect(caughtException).not.toBeNull()
         });
 
         it('returns data when successful', async () => {
@@ -190,11 +202,11 @@ describe('PodcastsClientUnitTest', () => {
                 key1: 'value1',
                 key2: 'value2'
             };
-            configureAxiosToReturnGoodResponse(axiosPost, data);
+            configureAxiosToReturnGoodResponse(axios.post, data);
 
             const details = await getPodcastDetails([1, 2, 3], getCredentials());
 
-            assert.deepEqual(details, data, 'returns data when successful');
+            expect(details).toStrictEqual(data)
         });
     });
 });

@@ -55,4 +55,4 @@ web-build/
 dist/
 
 # Coverage reports
-.nyc_output
+coverage/
