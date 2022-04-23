@@ -6,7 +6,7 @@
     "start": "expo start --dev-client",
     "tests-unit": "mocha --recursive tests/unit",
     "tests-external": "mocha --recursive tests/external",
-    "coverage": "nyc npm run tests-unit",
+    "coverage": "nyc yarn run tests-unit",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
