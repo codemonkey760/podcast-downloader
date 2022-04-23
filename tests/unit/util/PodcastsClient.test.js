@@ -1,13 +1,9 @@
-const sinon = require('sinon');
-const {assert} = require('chai');
-const {faker} = require('@faker-js/faker');
+import faker from '@faker-js/faker'
 
-const axios = require('axios');
+import axios from 'axios'
+jest.mock('axios')
 
-const {
-    getProgramPodcasts,
-    getPodcastDetails
-} = require('../../../Util/PodcastClient')
+import { getProgramPodcasts, getPodcastDetails } from '../../../Util/PodcastClient'
 
 function getCredentials(sessionId = null, profileId = null) {
     if (sessionId === null) {
@@ -30,7 +26,7 @@ function configureAxiosToReturnGoodResponse(axios, data = {}) {
         data
     };
 
-    axios.resolves(response);
+    axios.mockResolvedValue(response);
 }
 
 function configureAxiosToReturnBadResponse(axios) {
@@ -39,60 +35,45 @@ function configureAxiosToReturnBadResponse(axios) {
         statusText: 'Bad Request'
     };
 
-    axios.resolves(response);
+    axios.mockResolvedValue(response);
 }
 
 describe('PodcastsClientUnitTest', () => {
+    afterEach(() => {
+        jest.clearAllMocks()
+    })
+
     describe('getProgramPodcasts', () => {
-        let axiosGet;
-
-        beforeEach(() => {
-            axiosGet = sinon.stub(axios, 'get');
-        });
-
-        afterEach(() => {
-            axiosGet.restore();
-        });
-
-        it('makes get request to iheart podcasts endpoint',  async () => {
+        it('makes one get request to iheart podcasts endpoint',  async () => {
             const program_id = faker.datatype.number();
+            const limit = faker.datatype.number();
             const expected_url = `https://us.api.iheart.com/api/v3/podcast/podcasts/${program_id}/episodes`
-            axiosGet.resolves({
-                status: 200,
-                statusText: 'OK',
-                data: []
-            });
+            configureAxiosToReturnGoodResponse(axios.get, []);
 
-            await getProgramPodcasts(program_id, 1);
+            await getProgramPodcasts(program_id, limit);
 
-            assert.isTrue(axiosGet.calledOnce, 'makes only one get call');
-            assert.isAtLeast(axiosGet.args[0].length, 1, 'get call has at least one argument');
-            assert.equal(axiosGet.args[0][0], expected_url, 'makes get call to iheart podcasts endpoint for program');
+            expect(axios.get.mock.calls.length).toBe(1)
+            expect(axios.get.mock.calls[0].length).toBeGreaterThanOrEqual(1)
+            expect(axios.get.mock.calls[0][0]).toBe(expected_url)
         });
 
         it('supplies the limit as a query param', async () => {
+            const program_id = faker.datatype.number();
             const limit = faker.datatype.number();
-            axiosGet.resolves({
-                status: 200,
-                statusText: 'OK',
-                data: [],
-            });
+            configureAxiosToReturnGoodResponse(axios.get, []);
 
-            await getProgramPodcasts('some_program_id', limit);
+            await getProgramPodcasts(program_id, limit);
 
-            assert.isAtLeast(axiosGet.args[0].length, 2, 'get call supplies config parameter');
-            assert.isObject(axiosGet.args[0][1], 'get call supplies object as config parameter');
-            assert.exists(axiosGet.args[0][1].params, 'config parameters contains query params');
-
-            const params = axiosGet.args[0][1].params;
-            assert.equal(params['limit'], limit, 'get call supplies limit as query param');
+            expect(axios.get.mock.calls.length).toBe(1)
+            expect(axios.get.mock.calls[0].length).toBeGreaterThanOrEqual(2)
+            expect(axios.get.mock.calls[0][1]).toBeInstanceOf(Object)
+            expect(axios.get.mock.calls[0][1]).toHaveProperty('params')
+            expect(axios.get.mock.calls[0][1].params).toHaveProperty('limit')
+            expect(axios.get.mock.calls[0][1].params.limit).toBe(limit)
         });
 
         it('throws exception when response code indicates an http error', async () => {
-            axiosGet.resolves({
-                status: 400,
-                statusText: 'Bad request'
-            });
+            configureAxiosToReturnBadResponse(axios.get)
 
             let caughtError = null;
             try {
@@ -101,64 +82,51 @@ describe('PodcastsClientUnitTest', () => {
                 caughtError = error;
             }
 
-            assert.isNotNull(caughtError);
+            expect(caughtError).not.toBeNull()
         });
 
         it('returns the json response when successful', async () => {
             const fakeData = [1,2,3];
-            axiosGet.resolves({
-                status: 200,
-                statusText: 'OK',
-                data: {
-                    data: fakeData
-                }
-            });
+            configureAxiosToReturnGoodResponse(axios.get, {data: fakeData})
 
             const podcasts = await getProgramPodcasts('some_program_id', 1);
 
-            assert.equal(podcasts, fakeData, 'getProgramPodcasts returns data when successful');
+            expect(podcasts).toBeInstanceOf(Array)
+            expect(podcasts).toStrictEqual(fakeData)
         });
     });
 
     describe('getPodcastDetails', () => {
-        let axiosPost;
-
-        beforeEach(() => {
-            axiosPost = sinon.stub(axios, 'post');
-        });
-
-        afterEach(() => {
-            axiosPost.restore();
-        });
-
-        it('makes post request to iheart streams endpoint', async () => {
+        it('makes one post request to iheart streams endpoint', async () => {
+            // TODO: make this configurable rather than hard-coded
             const expected_url = 'https://us.api.iheart.com/api/v2/playback/streams';
-            configureAxiosToReturnGoodResponse(axiosPost);
+            configureAxiosToReturnGoodResponse(axios.post);
 
             await getPodcastDetails([1,2,3], getCredentials());
 
-            assert.isTrue(axiosPost.calledOnce, 'makes only one post request');
-            assert.isAtLeast(axiosPost.args[0].length, 1, 'supplies url to post call');
-            assert.equal(axiosPost.args[0][0], expected_url, 'makes post call to iheart steams url');
+            expect(axios.post.mock.calls.length).toBe(1)
+            expect(axios.post.mock.calls[0].length).toBeGreaterThanOrEqual(1)
+            expect(axios.post.mock.calls[0][0]).toBe(expected_url)
         });
 
         it('identifies itself with credentials', async () => {
             const sessionId = faker.datatype.string(9);
             const profileId = faker.datatype.string(9);
-            configureAxiosToReturnGoodResponse(axiosPost);
+            configureAxiosToReturnGoodResponse(axios.post);
 
             await getPodcastDetails([1,2,3], getCredentials(sessionId, profileId));
 
-            assert.isAtLeast(axiosPost.args[0].length, 3, 'post call supplies config parameter');
-            assert.exists(axiosPost.args[0][2].headers, 'post call supplies headers in config');
-
-            const headers = axiosPost.args[0][2].headers;
-            assert.equal(headers['X-Session-Id'], sessionId, 'post call supplies session id');
-            assert.equal(headers['X-User-Id'], profileId, 'post call supplies profile id via user id header');
+            expect(axios.post.mock.calls.length).toBe(1)
+            expect(axios.post.mock.calls[0].length).toBeGreaterThanOrEqual(3)
+            expect(axios.post.mock.calls[0][2]).toHaveProperty('headers')
+            expect(axios.post.mock.calls[0][2].headers).toHaveProperty('X-Session-Id')
+            expect(axios.post.mock.calls[0][2].headers['X-Session-Id']).toBe(sessionId)
+            expect(axios.post.mock.calls[0][2].headers).toHaveProperty('X-User-Id')
+            expect(axios.post.mock.calls[0][2].headers['X-User-Id']).toBe(profileId)
         });
 
         it('supplies data to endpoint', async () => {
-            configureAxiosToReturnGoodResponse(axiosPost);
+            configureAxiosToReturnGoodResponse(axios.post);
 
             await getPodcastDetails([1,2,3], getCredentials());
 
