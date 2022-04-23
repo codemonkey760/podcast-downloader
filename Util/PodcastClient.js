@@ -1,20 +1,20 @@
-const axios = require('axios');
+import axios from 'axios'
 
-async function getProgramPodcasts(program_id, limit= 1) {
+export async function getProgramPodcasts(program_id, limit= 1) {
     const url = `https://us.api.iheart.com/api/v3/podcast/podcasts/${program_id}/episodes`
     const params = {
         limit
-    };
+    }
 
     const response = await axios.get(url, {params});
     if (response.status >= 400) {
         throw new Error();
     }
 
-    return response.data.data;
+    return response.data.data
 }
 
-async function getPodcastDetails(podcast_ids, credentials) {
+export async function getPodcastDetails(podcast_ids, credentials) {
     const headers = {
         "X-Session-Id": credentials.sessionId,
         "X-User-Id": credentials.profileId
@@ -43,8 +43,3 @@ async function getPodcastDetails(podcast_ids, credentials) {
 
     return response.data;
 }
-
-module.exports = {
-    getProgramPodcasts,
-    getPodcastDetails
-};
