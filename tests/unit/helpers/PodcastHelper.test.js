@@ -1,9 +1,12 @@
-const sinon = require('sinon');
-const { assert } = require('chai');
+import { getProgramPodcasts, getPodcastDetails } from '../../../Util/PodcastClient'
+jest.mock('../../../Util/PodcastClient', () => {
+    return {
+        getProgramPodcasts: jest.fn(),
+        getPodcastDetails: jest.fn()
+    }
+})
 
-const podcastClient = require('../../../Util/PodcastClient');
-
-const { getPodcastsForProgram } = require('../../../Helpers/PodcastHelper');
+import { getPodcastsForProgram } from '../../../Helpers/PodcastHelper'
 
 function getRawPayload() {
     return [
@@ -52,45 +55,41 @@ function getReducedPayload() {
 }
 
 describe('Podcast Helper unit tests', () => {
+    afterEach(() => {
+        jest.resetAllMocks()
+    })
+
     describe('getPodcastsForProgram', () => {
-        let getProgramPodcastsMock;
         const programIdMock = 777;
         const limitMock = 42;
 
-        beforeEach(() => {
-            getProgramPodcastsMock = sinon.stub(podcastClient, 'getProgramPodcasts');
-        });
-
-        afterEach(() => {
-            getProgramPodcastsMock.restore();
-        });
-
         it('uses the podcasts client to fetch podcasts', async () => {
-            getProgramPodcastsMock.resolves(getRawPayload());
-            await getPodcastsForProgram(programIdMock, limitMock);
+            getProgramPodcasts.mockResolvedValue(getRawPayload())
+            await getPodcastsForProgram(programIdMock, limitMock)
 
-            assert.isTrue(getProgramPodcastsMock.calledOnce, 'makes only one call to getProgramPodcasts');
-            assert.isAtLeast(getProgramPodcastsMock.args[0].length, 1, 'supplies a value for programId');
-            assert.equal(getProgramPodcastsMock.args[0][0], programIdMock, 'supplies the program id');
-            assert.isAtLeast(getProgramPodcastsMock.args[0].length, 2, 'supplies a value for limit');
-            assert.equal(getProgramPodcastsMock.args[0][1], limitMock, 'supplies the limit');
+            expect(getProgramPodcasts.mock.calls.length).toBe(1)
+            const getProgramPodcastsCall = getProgramPodcasts.mock.calls[0]
+
+            expect(getProgramPodcastsCall.length).toBeGreaterThanOrEqual(2)
+            expect(getProgramPodcastsCall[0]).toBe(programIdMock)
+            expect(getProgramPodcastsCall[1]).toBe(limitMock)
         });
 
         it('reduces the response', async () => {
-            getProgramPodcastsMock.resolves(getRawPayload());
-            const reducedPayload = getReducedPayload();
+            getProgramPodcasts.mockResolvedValue(getRawPayload())
+            const reducedPayload = getReducedPayload()
 
-            const response = await getPodcastsForProgram(programIdMock, limitMock);
+            const response = await getPodcastsForProgram(programIdMock, limitMock)
 
-            assert.deepEqual(response, reducedPayload, 'returns the reduced response');
+            expect(response).toStrictEqual(reducedPayload)
         });
 
         it('returns empty array when no results fetched', async () => {
-            getProgramPodcastsMock.resolves([]);
+            getProgramPodcasts.mockResolvedValue([])
 
             const result = await getPodcastsForProgram(programIdMock, limitMock);
 
-            assert.deepEqual(result, [], 'returns empty array');
+            expect(result).toStrictEqual([])
         });
     });
 });

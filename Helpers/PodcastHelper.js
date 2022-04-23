@@ -1,7 +1,7 @@
-const podcastsClient = require('../Util/PodcastClient');
+import { getProgramPodcasts } from '../Util/PodcastClient'
 
-async function getPodcastsForProgram(programId, limit) {
-    const response = await podcastsClient.getProgramPodcasts(programId, limit);
+export async function getPodcastsForProgram(programId, limit) {
+    const response = await getProgramPodcasts(programId, limit);
 
     return response.map(reducePodcast);
 }
@@ -9,7 +9,3 @@ async function getPodcastsForProgram(programId, limit) {
 function reducePodcast({id, title, startDate, imageUrl}) {
     return {id, title, startDate, imageUrl}
 }
-
-module.exports = {
-    getPodcastsForProgram
-};
