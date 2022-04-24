@@ -10,15 +10,6 @@ const getFileName = (ext, podcastId) => (podcastId + '.' + ext);
 const getFileExtFromStreamUrl = streamUrl => (streamUrl.split('/').pop().split('?')[0].split('.').pop());
 
 async function downloadPodcast(podcastId, progressCallback, done, error) {
-    const perm = await MediaLibrary.getPermissionsAsync(true)
-    if (perm.status !== MediaLibrary.PermissionStatus.GRANTED) {
-        console.log('failed to get media library permission ... aborting download')
-
-        done('')
-
-        return
-    }
-
     try {
         console.log('Starting download');
         const credentials = credentialsReducer(await createUser());
@@ -31,9 +22,15 @@ async function downloadPodcast(podcastId, progressCallback, done, error) {
 
         console.log('And here we go');
 
-        const downloader = FileSystem.createDownloadResumable(streamUrl, FileSystem.direc + fileName, {}, progressCallback);
+        const downloader = FileSystem.createDownloadResumable(streamUrl, FileSystem.documentDirectory + fileName, {}, progressCallback);
 
-        await downloader.downloadAsync();
+        const { uri } = await downloader.downloadAsync();
+        console.log('Downloaded to ' + uri);
+
+        const asset = await MediaLibrary.createAssetAsync(uri)
+        console.log(asset)
+
+        await MediaLibrary.createAlbumAsync('Podcasts', asset, false)
 
         done(fileName);
     } catch (e) {
