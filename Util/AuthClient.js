@@ -14,14 +14,19 @@ async function createUser() {
         'Host': 'us.api.iheart.com',
     }
 
-    let data = new URLSearchParams();
-    data.append('accessToken', 'anon');
-    data.append('accessTokenType', 'anon');
-    data.append('deviceId', deviceId);
-    data.append('deviceName', 'web-desktop');
-    data.append('host', 'webapp.US');
-    data.append('oauthUuid', oauthUuid);
-    data.append('userName', userName);
+    const rawData = {
+        accessToken: 'anon',
+        accessTokenType: 'anon',
+        deviceId: deviceId,
+        deviceName: 'web-desktop',
+        host: 'webapp.US',
+        oauthUuid: oauthUuid,
+        userName: userName
+    }
+
+    const data = Object.keys(rawData).map(
+        key => encodeURIComponent(key) + '=' + encodeURIComponent(rawData[key])
+    ).join('&')
 
     const url = 'https://us.api.iheart.com/api/v1/account/loginOrCreateOauthUser';
 
