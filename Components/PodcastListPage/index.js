@@ -60,7 +60,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
             await downloadPodcast(podcast.id, progressCallback, done, error);
 
             finishPodcastDownload(podcast.id);
-        }
+        }, progressPercent: 100
     }));
 
     return (
