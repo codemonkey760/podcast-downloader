@@ -29,7 +29,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
         async () => {
             setIsRefreshingList(true);
 
-            const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, 4);
+            const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, 8);
             refreshPodcastList(selectedProgramId, newPodcastsItems);
 
             setIsRefreshingList(false);

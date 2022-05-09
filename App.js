@@ -16,7 +16,7 @@ export default function App() {
   return (
       <Provider store={store}>
           <NavigationContainer>
-              <Stack.Navigator>
+              <Stack.Navigator screenOptions={{headerShown: false}}>
                   <Stack.Screen name="PodcastListPage" component={PodcastListPage} />
               </Stack.Navigator>
               <StatusBar style="auto" />
