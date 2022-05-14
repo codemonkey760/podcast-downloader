@@ -42,9 +42,9 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
             startPodcastDownload(podcast.id);
             console.log('downloading podcast: ' + podcast.id);
 
-            const progressCallback = downloadProgress => {
+            const progressCallback = ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
                 console.log(
-                    `Downloading: ${downloadProgress.totalBytesWritten} / ${downloadProgress.totalBytesExpectedToWrite}`
+                    `Downloading: ${totalBytesWritten} / ${totalBytesExpectedToWrite}`
                 );
             };
 
