@@ -66,8 +66,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
                 };
 
                 const error = e => {
-                    console.log('An error occurred')
-                    console.log(JSON.stringify(e));
+                    errorAlert(`An error occurred while trying to download podcast with id ${podcast.id}`)
                 };
 
                 await downloadPodcast(podcast.id, progressCallback, done, error);
