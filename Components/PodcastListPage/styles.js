@@ -10,19 +10,20 @@ export const StyledPodcastScrollView = styled.ScrollView`
 export const RefreshHelperContainer = styled.View`
   margin: 5px;
   border-radius: 5px;
-  background-color: #FFF;
+  background-color: #bdc8d3;
+  padding-top: 15px;
+  padding-bottom: 15px;
 `
 
 export const RefreshHelperHeader = styled.Text`
-  margin-top: 15px;
-  margin-bottom: 15px;
   text-align: center;
+  font-size: 16px;
   font-weight: bold;
-  color: red
+  color: #e3800f;
 `
 
 export const RefreshHelperText = styled.Text`
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-top: 10px;
   text-align: center;
+  color: #0b0c10;
 `
