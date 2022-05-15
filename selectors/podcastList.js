@@ -1,3 +1,7 @@
-export const getPodcastListForProgram = (state, programId) => {
-    return (state.podcastList[programId]) ? state.podcastList[programId] : [];
+export const getPodcastList = (state) => {
+    return state.podcastList
+}
+
+export const getPodcast = (state, id) => {
+    return state.podcastList[id] ?? {}
 }

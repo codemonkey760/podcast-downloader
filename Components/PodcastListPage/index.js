@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 
 //selectors
 import { getSelectedProgramId } from '../../selectors/program';
-import { getPodcastListForProgram } from '../../selectors/podcastList';
+import { getPodcastList } from '../../selectors/podcastList';
 
 // actions
 import {
@@ -44,8 +44,10 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
             try {
                 console.log(`Looking for ${podcastCount} new Podcasts for ${selectedProgramId}`)
                 const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, podcastCount);
-                refreshPodcastList(selectedProgramId, newPodcastsItems);
+                console.log(JSON.stringify(newPodcastsItems))
+                refreshPodcastList(newPodcastsItems);
             } catch (e) {
+                console.log(e)
                 errorAlert('An error occurred while trying to query for podcasts')
             }
 
@@ -54,17 +56,21 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
         [podcastCount]
     );
 
+    console.log(JSON.stringify('PODCAST LIST'))
+    console.log(JSON.stringify(podcastList))
+
     let listContents;
     if (podcastList.length > 0) {
-        listContents = podcastList.map((podcast) => PodcastListItem({
-            podcast, onPress: async () => {
-                startPodcastDownload(podcast.id);
-                console.log('downloading podcast: ' + podcast.id);
+        listContents = podcastList.map(({ id }) => PodcastListItem({
+            id, onPress: async () => {
+                startPodcastDownload(id);
+                console.log('downloading podcast: ' + id);
 
                 const progressCallback = ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
-                    console.log(
-                        `Downloading: ${totalBytesWritten} / ${totalBytesExpectedToWrite}`
-                    );
+                    const percent = Math.round((totalBytesWritten / totalBytesExpectedToWrite) * 100)
+
+                    updatePodcastDownload(id, percent)
+                    console.log(`Downloading: ${percent}`);
                 };
 
                 const done = fileName => {
@@ -72,13 +78,13 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
                 };
 
                 const error = e => {
-                    errorAlert(`An error occurred while trying to download podcast with id ${podcast.id}`)
+                    errorAlert(`An error occurred while trying to download podcast with id ${id}`)
                 };
 
-                await downloadPodcast(podcast.id, progressCallback, done, error);
+                await downloadPodcast(id, progressCallback, done, error);
 
-                finishPodcastDownload(podcast.id);
-            }, progressPercent: 100
+                finishPodcastDownload(id);
+            }
         }));
     } else {
         listContents = (
@@ -109,7 +115,7 @@ const mapStateToProps = (state) => {
 
     return {
         selectedProgramId,
-        podcastList: getPodcastListForProgram(state, selectedProgramId)
+        podcastList: getPodcastList(state)
     }
 }
 

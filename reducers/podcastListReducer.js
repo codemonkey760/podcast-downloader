@@ -5,17 +5,15 @@ import {
     UPDATE_PODCAST_DOWNLOAD
 } from '../actions/podcastListActions';
 
-const PODCAST_LIST_INITIAL_STATE = {};
+const PODCAST_LIST_INITIAL_STATE = [];
 
 export const podcastListReducer = (state = PODCAST_LIST_INITIAL_STATE, action) => {
+    console.log(JSON.stringify(action))
+
     switch(action.type) {
         case REFRESH_PODCAST_LIST:
-            const newState = {
-                ...state
-            };
-            newState[action.payload.programId] = action.payload.newPodcastList;
-
-            return newState;
+            console.log(action.payload.newPodcastList ?? 'undefined')
+            return action.payload.newPodcastList;
         default:
             return state;
     }
