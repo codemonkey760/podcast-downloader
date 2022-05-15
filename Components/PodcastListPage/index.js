@@ -29,7 +29,6 @@ import  {
     RefreshHelperText
 } from './styles';
 import { getPodcastsForProgram } from '../../Helpers/PodcastHelper';
-import downloadPodcast from '../../Helpers/Downloader';
 
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
@@ -61,31 +60,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
 
     let listContents;
     if (podcastList.length > 0) {
-        listContents = podcastList.map(({ id }) => PodcastListItem({
-            id, onPress: async () => {
-                startPodcastDownload(id);
-                console.log('downloading podcast: ' + id);
-
-                const progressCallback = ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
-                    const percent = Math.round((totalBytesWritten / totalBytesExpectedToWrite) * 100)
-
-                    updatePodcastDownload(id, percent)
-                    console.log(`Downloading: ${percent}`);
-                };
-
-                const done = fileName => {
-                    console.log(`Download to '${fileName}' completed`);
-                };
-
-                const error = e => {
-                    errorAlert(`An error occurred while trying to download podcast with id ${id}`)
-                };
-
-                await downloadPodcast(id, progressCallback, done, error);
-
-                finishPodcastDownload(id);
-            }
-        }));
+        listContents = podcastList.map((podcast) => PodcastListItem(podcast))
     } else {
         listContents = (
             <RefreshHelperContainer>

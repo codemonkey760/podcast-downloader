@@ -1,17 +1,51 @@
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import { getPodcast } from '../../selectors/podcastList'
-import { useSelector } from 'react-redux'
+import React, { useState } from 'react';
+import {Alert, TouchableOpacity} from 'react-native';
 
 import {
     PodcastListItemView,
     PodcastIcon,
     PodcastTitle,
-    DownloadBar, TitleAndPic
+    DownloadBar,
+    TitleAndPic
 } from './styles';
+import downloadPodcast from "../../Helpers/Downloader";
 
-function PodcastListItem({ id, onPress }) {
-    const { imageUrl, progress, title } = useSelector((state) => getPodcast(state, id))
+const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
+
+function PodcastListItem({ id, imageUrl, title }) {
+    const [progress, setProgress] = useState(0)
+    const [isDownloading, setIsDownloading] = useState(false)
+
+    const onPress = async () => {
+        if (isDownloading) {
+            console.log(`ALREADY DOWNLOADING PODCAST ${id}`)
+
+            return;
+        }
+
+        setIsDownloading(true)
+
+        console.log('downloading podcast: ' + id);
+
+        const progressCallback = ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
+            const percent = Math.round((totalBytesWritten / totalBytesExpectedToWrite) * 100)
+
+            setProgress(percent)
+            console.log(`Downloading: ${percent}`);
+        };
+
+        const done = fileName => {
+            console.log(`Download to '${fileName}' completed`);
+        };
+
+        const error = e => {
+            errorAlert(`An error occurred while trying to download podcast with id ${id}`)
+        };
+
+        await downloadPodcast(id, progressCallback, done, error);
+
+        setIsDownloading(false)
+    }
 
     return (
         <TouchableOpacity key={id} onPress={onPress}>
