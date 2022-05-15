@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import {Alert, TouchableOpacity} from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import {
     PodcastListItemView,
@@ -8,44 +7,9 @@ import {
     DownloadBar,
     TitleAndPic
 } from './styles';
-import downloadPodcast from "../../Helpers/Downloader";
 
-const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
-
-function PodcastListItem({ id, imageUrl, title }) {
-    const [progress, setProgress] = useState(0)
-    const [isDownloading, setIsDownloading] = useState(false)
-
-    const onPress = async () => {
-        if (isDownloading) {
-            console.log(`ALREADY DOWNLOADING PODCAST ${id}`)
-
-            return;
-        }
-
-        setIsDownloading(true)
-
-        console.log('downloading podcast: ' + id);
-
-        const progressCallback = ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
-            const percent = Math.round((totalBytesWritten / totalBytesExpectedToWrite) * 100)
-
-            setProgress(percent)
-            console.log(`Downloading: ${percent}`);
-        };
-
-        const done = fileName => {
-            console.log(`Download to '${fileName}' completed`);
-        };
-
-        const error = e => {
-            errorAlert(`An error occurred while trying to download podcast with id ${id}`)
-        };
-
-        await downloadPodcast(id, progressCallback, done, error);
-
-        setIsDownloading(false)
-    }
+function PodcastListItem({ id, imageUrl, title, downloadList, onPress }) {
+    const progress = downloadList[id] ?? 0
 
     return (
         <TouchableOpacity key={id} onPress={onPress}>
@@ -55,7 +19,7 @@ function PodcastListItem({ id, imageUrl, title }) {
                     <PodcastTitle>{title}</PodcastTitle>
                 </TitleAndPic>
                 {(progress > 0) && (
-                    <DownloadBar progressPercent={progress} />
+                    <DownloadBar percent={progress} />
                 )}
             </PodcastListItemView>
         </TouchableOpacity>

@@ -9,12 +9,7 @@ import { getSelectedProgramId } from '../../selectors/program';
 import { getPodcastList } from '../../selectors/podcastList';
 
 // actions
-import {
-    refreshPodcastList,
-    startPodcastDownload,
-    updatePodcastDownload,
-    finishPodcastDownload
-} from '../../actions/podcastListActions';
+import { refreshPodcastList } from '../../actions/podcastListActions';
 
 // locals
 import PodcastListItem from "../PodcastListItem";
@@ -29,12 +24,51 @@ import  {
     RefreshHelperText
 } from './styles';
 import { getPodcastsForProgram } from '../../Helpers/PodcastHelper';
+import downloadPodcast from "../../Helpers/Downloader";
 
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
 const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList }) => {
     const [isRefreshingList, setIsRefreshingList] = useState(false);
     const [podcastCount, setPodcastCount] = useState(1);
+    const [downloadList, setDownloadList] = useState({'666': 50});
+    const updateDownload = (id, progress) => {
+        const newDownloadList = {...downloadList}
+
+        newDownloadList[id] = progress
+
+        setDownloadList(newDownloadList)
+    }
+    const isDownloading = (id) => (downloadList[id] && downloadList[id] < 100)
+
+    const createOnPressHandler = (id) => (
+        async () => {
+            if (isDownloading(id)) {
+                console.log(`ALREADY DOWNLOADING PODCAST ${id}`)
+
+                return;
+            }
+
+            console.log('downloading podcast: ' + id);
+
+            const progressCallback = ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
+                const percent = Math.round((totalBytesWritten / totalBytesExpectedToWrite) * 100)
+
+                updateDownload(id, percent)
+                console.log(`Downloading: ${percent}`);
+            };
+
+            const done = fileName => {
+                console.log(`Download to '${fileName}' completed`);
+            };
+
+            const error = e => {
+                errorAlert(`An error occurred while trying to download podcast with id ${id}`)
+            };
+
+            await downloadPodcast(id, progressCallback, done, error);
+        }
+    )
 
     const onRefresh = useCallback(
         async () => {
@@ -55,12 +89,13 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
         [podcastCount]
     );
 
-    console.log(JSON.stringify('PODCAST LIST'))
-    console.log(JSON.stringify(podcastList))
-
     let listContents;
     if (podcastList.length > 0) {
-        listContents = podcastList.map((podcast) => PodcastListItem(podcast))
+        listContents = podcastList.map(({ id, imageUrl, title }) => {
+            const onPress = createOnPressHandler(id)
+
+            return PodcastListItem({id, imageUrl, title, downloadList, onPress})
+        })
     } else {
         listContents = (
             <RefreshHelperContainer>
@@ -95,12 +130,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => (
-    bindActionCreators({
-        refreshPodcastList,
-        startPodcastDownload,
-        updatePodcastDownload,
-        finishPodcastDownload
-    }, dispatch)
+    bindActionCreators({refreshPodcastList}, dispatch)
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(PodcastListPage);
