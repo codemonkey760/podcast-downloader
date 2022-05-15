@@ -1,6 +1,6 @@
 // dependencies
 import React, { useState, useCallback } from 'react';
-import { RefreshControl } from 'react-native';
+import { RefreshControl, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -27,6 +27,8 @@ import  {
 import { getPodcastsForProgram } from '../../Helpers/PodcastHelper';
 import downloadPodcast from '../../Helpers/Downloader';
 
+const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
+
 const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList }) => {
     const [isRefreshingList, setIsRefreshingList] = useState(false);
 
@@ -34,8 +36,12 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
         async () => {
             setIsRefreshingList(true);
 
-            const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, 8);
-            refreshPodcastList(selectedProgramId, newPodcastsItems);
+            try {
+                const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, 8);
+                refreshPodcastList(selectedProgramId, newPodcastsItems);
+            } catch (e) {
+                errorAlert('An error occurred while trying to query for podcasts')
+            }
 
             setIsRefreshingList(false);
         },
