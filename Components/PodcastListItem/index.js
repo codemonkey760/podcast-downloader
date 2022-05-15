@@ -1,15 +1,15 @@
-import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
 import {
     PodcastListItemView,
     PodcastIcon,
     PodcastTitle,
-    DownloadBar, TitleAndPic
+    DownloadBar,
+    TitleAndPic
 } from './styles';
 
-export default function PodcastListItem({ podcast, onPress, progressPercent}) {
-    const {id, title, imageUrl} = podcast;
+function PodcastListItem({ id, imageUrl, title, downloadList, onPress }) {
+    const progress = downloadList[id] ?? 0
 
     return (
         <TouchableOpacity key={id} onPress={onPress}>
@@ -18,8 +18,12 @@ export default function PodcastListItem({ podcast, onPress, progressPercent}) {
                     <PodcastIcon source={{uri: imageUrl}} alt={'podcast'} />
                     <PodcastTitle>{title}</PodcastTitle>
                 </TitleAndPic>
-                <DownloadBar progressPercent={progressPercent} />
+                {(progress > 0) && (
+                    <DownloadBar percent={progress} />
+                )}
             </PodcastListItemView>
         </TouchableOpacity>
     );
 }
+
+export default PodcastListItem

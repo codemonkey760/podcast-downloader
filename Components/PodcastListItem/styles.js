@@ -35,10 +35,9 @@ export const DownloadBar = styled.View`
   min-height: 6px;
   height: 6px;
   max-height: 6px;
-  background-color: #858fa2;
-  //background-color: #3ca561;
+  background-color: ${props => (props.percent === 100) ? '#3ca561' : '#858fa2'};
   border-radius: 3px;
-  width: ${props => props.progressPercent + '%'};
+  width: ${props => props.percent + '%'};
   position: relative;
   top: 8px;
 `
