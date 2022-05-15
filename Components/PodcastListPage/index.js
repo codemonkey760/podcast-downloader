@@ -19,6 +19,10 @@ import {
 // locals
 import PodcastListItem from "../PodcastListItem";
 import  {
+    PodcastListContainer,
+    PodcastCountContainer,
+    PodcastCount,
+    PodcastCountSlider,
     StyledPodcastScrollView,
     RefreshHelperContainer,
     RefreshHelperHeader,
@@ -31,13 +35,15 @@ const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
 const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList }) => {
     const [isRefreshingList, setIsRefreshingList] = useState(false);
+    const [podcastCount, setPodcastCount] = useState(1);
 
     const onRefresh = useCallback(
         async () => {
             setIsRefreshingList(true);
 
             try {
-                const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, 8);
+                console.log(`Looking for ${podcastCount} new Podcasts for ${selectedProgramId}`)
+                const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, podcastCount);
                 refreshPodcastList(selectedProgramId, newPodcastsItems);
             } catch (e) {
                 errorAlert('An error occurred while trying to query for podcasts')
@@ -45,7 +51,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
 
             setIsRefreshingList(false);
         },
-        []
+        [podcastCount]
     );
 
     let listContents;
@@ -84,11 +90,17 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
     }
 
     return (
-        <StyledPodcastScrollView
-            refreshControl={<RefreshControl refreshing={isRefreshingList} onRefresh={onRefresh} />}
-        >
-            {listContents}
-        </StyledPodcastScrollView>
+        <PodcastListContainer>
+            <PodcastCountContainer>
+                <PodcastCount>{podcastCount}</PodcastCount>
+                <PodcastCountSlider maximumValue={8} minimumValue={1} step={1} value={podcastCount} onValueChange={newValue => setPodcastCount(newValue)} />
+            </PodcastCountContainer>
+            <StyledPodcastScrollView
+                refreshControl={<RefreshControl refreshing={isRefreshingList} onRefresh={onRefresh} />}
+            >
+                {listContents}
+            </StyledPodcastScrollView>
+        </PodcastListContainer>
     );
 }
 
