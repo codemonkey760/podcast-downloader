@@ -7,7 +7,6 @@ export const podcastListReducer = (state = PODCAST_LIST_INITIAL_STATE, action) =
 
     switch(action.type) {
         case REFRESH_PODCAST_LIST:
-            console.log(action.payload.newPodcastList ?? 'undefined')
             return action.payload.newPodcastList;
         default:
             return state;
