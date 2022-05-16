@@ -8,26 +8,21 @@ const { getPodcastDetails } = require('../Util/PodcastClient');
 const credentialsReducer = ({ sessionId, profileId }) => ({ sessionId, profileId });
 const streamUrlReducer = response => (response['items'][0]['streamUrl']);
 
-const getFileName = (ext, podcastId) => (podcastId + '.' + ext);
+// const getFileName = (ext, podcastId) => (podcastId + '.' + ext);
 const getFileExtFromStreamUrl = streamUrl => (streamUrl.split('/').pop().split('?')[0].split('.').pop());
 
-async function downloadPodcast(podcastId, progressCallback, done, error) {
-    // for (let i = 0; i < 10000000; i+= 50000) {
-    //     let progress = {
-    //         totalBytesExpectedToWrite: 10000000,
-    //         totalBytesWritten: i
-    //     };
-    //     await delay(50);
-    //     progressCallback(progress);
-    //
-    //     if (i >= 5000000) {
-    //         error(new Error('Hi'))
-    //         return
-    //     }
-    // }
-    //
-    // done('/non-existent-folder/non-existent-file.mp3');
+const getFileName = (ext, podcastId, title) => {
+    const jkTitleRegex = new RegExp("^John & Ken Show Hour (\\d+) \\((\\d+)/(\\d+)\\)$")
+    const fileNamePattern = "jk-$2$3-hr$1"
 
+    if (title.match(jkTitleRegex)) {
+        return title.replace(jkTitleRegex, fileNamePattern) + '.' + ext
+    } else {
+        return 'jk-' + podcastId + '.' + ext
+    }
+}
+
+async function downloadPodcast(podcastId, title, progressCallback, done, error) {
     try {
         console.log('Starting download');
         const credentials = credentialsReducer(await createUser());
@@ -35,7 +30,7 @@ async function downloadPodcast(podcastId, progressCallback, done, error) {
         const streamUrl = streamUrlReducer(await getPodcastDetails(podcastId, credentials));
         console.log('Got stream url: ' + streamUrl);
 
-        const fileName = getFileName(getFileExtFromStreamUrl(streamUrl), podcastId);
+        const fileName = getFileName(getFileExtFromStreamUrl(streamUrl), podcastId, title);
         console.log('Made a filename: ' + fileName);
 
         console.log('And here we go');

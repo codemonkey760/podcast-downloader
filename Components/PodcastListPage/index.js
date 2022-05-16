@@ -41,7 +41,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
     }
     const isDownloading = (id) => (downloadList[id] && downloadList[id] < 100)
 
-    const createOnPressHandler = (id) => (
+    const createOnPressHandler = (id, title) => (
         async () => {
             if (isDownloading(id)) {
                 console.log(`ALREADY DOWNLOADING PODCAST ${id}`)
@@ -66,7 +66,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
                 errorAlert(`An error occurred while trying to download podcast with id ${id}`)
             };
 
-            await downloadPodcast(id, progressCallback, done, error);
+            await downloadPodcast(id, title, progressCallback, done, error);
         }
     )
 
@@ -75,9 +75,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
             setIsRefreshingList(true);
 
             try {
-                console.log(`Looking for ${podcastCount} new Podcasts for ${selectedProgramId}`)
                 const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, podcastCount);
-                console.log(JSON.stringify(newPodcastsItems))
                 refreshPodcastList(newPodcastsItems);
             } catch (e) {
                 console.log(e)
@@ -92,7 +90,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
     let listContents;
     if (podcastList.length > 0) {
         listContents = podcastList.map(({ id, imageUrl, title }) => {
-            const onPress = createOnPressHandler(id)
+            const onPress = createOnPressHandler(id, title)
 
             return PodcastListItem({id, imageUrl, title, downloadList, onPress})
         })
