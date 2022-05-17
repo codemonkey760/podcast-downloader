@@ -89,11 +89,15 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
 
     let listContents;
     if (podcastList.length > 0) {
-        listContents = podcastList.map(({ id, imageUrl, title }) => {
-            const onPress = createOnPressHandler(id, title)
-
-            return PodcastListItem({id, imageUrl, title, downloadList, onPress})
-        })
+        listContents = podcastList.map(({ id, imageUrl, title }) => (
+            <PodcastListItem
+                id={id}
+                imageUrl={imageUrl}
+                title={title}
+                downloadList={downloadList}
+                onPress={createOnPressHandler(id, title)}
+            />
+        ))
     } else {
         listContents = (
             <RefreshHelperContainer>
