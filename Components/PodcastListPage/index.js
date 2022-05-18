@@ -1,18 +1,13 @@
 // dependencies
-import React, { useState, useCallback } from 'react';
-import { RefreshControl, Alert } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState, useCallback } from 'react'
+import { RefreshControl, Alert } from 'react-native'
+import { connect } from 'react-redux'
 
 //selectors
-import { getSelectedProgramId } from '../../selectors/program';
-import { getPodcastList } from '../../selectors/podcastList';
-
-// actions
-import { refreshPodcastList } from '../../actions/podcastListActions';
+import { getSelectedProgramId } from '../../selectors/program'
 
 // locals
-import PodcastListItem from "../PodcastListItem";
+import PodcastListItem from "../PodcastListItem"
 import  {
     PodcastListContainer,
     PodcastCountContainer,
@@ -22,28 +17,36 @@ import  {
     RefreshHelperContainer,
     RefreshHelperHeader,
     RefreshHelperText
-} from './styles';
-import { getPodcastsForProgram } from '../../Helpers/PodcastHelper';
+} from './styles'
+
+import { getPodcastsForProgram } from '../../Helpers/PodcastHelper'
 
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
-const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList }) => {
-    const [isRefreshingList, setIsRefreshingList] = useState(false);
-    const [podcastCount, setPodcastCount] = useState(1);
+const PodcastListPage = ({ selectedProgramId }) => {
+    const [isRefreshingList, setIsRefreshingList] = useState(false)
+    const [podcastList, setPodcastList] = useState([])
+    const [podcastCount, setPodcastCount] = useState(1)
+
+    const logAndSetPodcastList = (newPodcastList) => {
+        console.log(JSON.stringify(newPodcastList))
+        setPodcastList(newPodcastList)
+    }
 
     const onRefresh = useCallback(
         async () => {
-            setIsRefreshingList(true);
+            setIsRefreshingList(true)
 
             try {
-                const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, podcastCount);
-                refreshPodcastList(newPodcastsItems);
+                const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, podcastCount)
+                logAndSetPodcastList(newPodcastsItems)
+
             } catch (e) {
                 console.log(e)
                 errorAlert('An error occurred while trying to query for podcasts')
             }
 
-            setIsRefreshingList(false);
+            setIsRefreshingList(false)
         },
         [podcastCount]
     );
@@ -82,12 +85,7 @@ const mapStateToProps = (state) => {
 
     return {
         selectedProgramId,
-        podcastList: getPodcastList(state)
     }
 }
 
-const mapDispatchToProps = (dispatch) => (
-    bindActionCreators({refreshPodcastList}, dispatch)
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(PodcastListPage);
+export default connect(mapStateToProps)(PodcastListPage);
