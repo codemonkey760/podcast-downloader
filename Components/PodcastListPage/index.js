@@ -91,6 +91,7 @@ const PodcastListPage = ({ selectedProgramId, podcastList, refreshPodcastList })
     if (podcastList.length > 0) {
         listContents = podcastList.map(({ id, imageUrl, title }) => (
             <PodcastListItem
+                key={id}
                 id={id}
                 imageUrl={imageUrl}
                 title={title}
