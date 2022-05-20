@@ -54,7 +54,7 @@ const PodcastListPage = ({ selectedProgramId }) => {
     let listContents;
     if (podcastList.length > 0) {
         listContents = podcastList.map(({ id, imageUrl, title }) => (
-            <PodcastListItem key={id} id={id} imageUrl={imageUrl} title={title} />
+            <PodcastListItem key={Math.random()} id={id} imageUrl={imageUrl} title={title} />
         ))
     } else {
         listContents = (
