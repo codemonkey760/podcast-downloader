@@ -15,7 +15,8 @@ export const PodcastCountContainer = styled.View`
   flex-direction: row;
   background-color: #bdc8d3;
   max-height: 35px;
-  margin: 10px 10px 0px 10px;
+  min-height: 35px;
+  margin: 10px 10px 10px 10px;
   border-radius: 5px;
   padding: 5px;
 `
