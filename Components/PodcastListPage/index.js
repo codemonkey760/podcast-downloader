@@ -1,13 +1,8 @@
-// dependencies
 import React, { useState, useCallback } from 'react'
 import { RefreshControl, Alert } from 'react-native'
 import { connect } from 'react-redux'
-
-//selectors
 import { getSelectedProgramId } from '../../selectors/program'
-
-// locals
-import PodcastListItem from "../PodcastListItem"
+import PodcastListItem from '../PodcastListItem'
 import  {
     PodcastListContainer,
     PodcastCountContainer,
@@ -18,7 +13,6 @@ import  {
     RefreshHelperHeader,
     RefreshHelperText
 } from './styles'
-
 import { getPodcastsForProgram } from '../../Helpers/PodcastHelper'
 
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
@@ -28,18 +22,13 @@ const PodcastListPage = ({ selectedProgramId }) => {
     const [podcastList, setPodcastList] = useState([])
     const [podcastCount, setPodcastCount] = useState(1)
 
-    const logAndSetPodcastList = (newPodcastList) => {
-        console.log(JSON.stringify(newPodcastList))
-        setPodcastList(newPodcastList)
-    }
-
     const onRefresh = useCallback(
         async () => {
             setIsRefreshingList(true)
 
             try {
                 const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, podcastCount)
-                logAndSetPodcastList(newPodcastsItems)
+                setPodcastList(newPodcastsItems)
 
             } catch (e) {
                 console.log(e)
