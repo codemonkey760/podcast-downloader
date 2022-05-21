@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react'
 import { RefreshControl, Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { getSelectedProgramId } from '../../selectors/program'
+import { getSelectedProgramId } from '../../selectors/programs'
 import PodcastListItem from '../PodcastListItem'
-import  {
+import {
     PodcastListContainer,
     PodcastCountContainer,
     PodcastCount,
