@@ -1,9 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { RefreshControl, Alert } from 'react-native'
-import { connect } from 'react-redux'
-import { getSelectedProgramId } from '../../selectors/program'
 import PodcastListItem from '../PodcastListItem'
-import  {
+import {
     PodcastListContainer,
     PodcastCountContainer,
     PodcastCount,
@@ -17,7 +15,8 @@ import { getPodcastsForProgram } from '../../Helpers/PodcastHelper'
 
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
-const PodcastListPage = ({ selectedProgramId }) => {
+const PodcastListPage = ({ route }) => {
+    const { programId } = route.params
     const [isRefreshingList, setIsRefreshingList] = useState(false)
     const [podcastList, setPodcastList] = useState([])
     const [podcastCount, setPodcastCount] = useState(1)
@@ -27,7 +26,7 @@ const PodcastListPage = ({ selectedProgramId }) => {
             setIsRefreshingList(true)
 
             try {
-                const newPodcastsItems = await getPodcastsForProgram(selectedProgramId, podcastCount)
+                const newPodcastsItems = await getPodcastsForProgram(programId, podcastCount)
                 setPodcastList(newPodcastsItems)
 
             } catch (e) {
@@ -69,12 +68,4 @@ const PodcastListPage = ({ selectedProgramId }) => {
     );
 }
 
-const mapStateToProps = (state) => {
-    const selectedProgramId = getSelectedProgramId(state);
-
-    return {
-        selectedProgramId,
-    }
-}
-
-export default connect(mapStateToProps)(PodcastListPage);
+export default PodcastListPage

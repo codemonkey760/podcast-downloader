@@ -48,7 +48,7 @@ export const RefreshHelperHeader = styled.Text`
   text-align: center;
   font-size: 16px;
   font-weight: bold;
-  color: #e3800f;
+  color: #d32415;
 `
 
 export const RefreshHelperText = styled.Text`

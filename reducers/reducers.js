@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import { selectedProgramReducer } from './programReducer';
+import { programsReducer } from './programsReducer';
 
 export default combineReducers({
-    selectedProgramId: selectedProgramReducer,
+    programs: programsReducer,
 });
