@@ -1,20 +1,36 @@
 import React from 'react'
-import { Text } from 'react-native'
 import { connect } from 'react-redux'
 
 import { getProgramsList } from '../../selectors/programs'
 
 import {
-    ProgramPageContainer
+    ProgramPageContainer,
+    ProgramScrollView
 } from './styles'
 
 import SelectProgramPrompt from '../SelectProgramPrompt'
+import ProgramListItem from '../ProgramListItem'
 
-const ProgramPage = ({ programsList }) => (
-    <ProgramPageContainer>
-        <SelectProgramPrompt />
-    </ProgramPageContainer>
-)
+const ProgramPage = ({ programsList }) => {
+    const programIds = Object.keys(programsList)
+
+    const listItems = programIds.map((id) => {
+        const { name } = programsList[id]
+
+        return (
+            <ProgramListItem key={Math.random()} programId={id} name={name} />
+        )
+    })
+
+    return (
+        <ProgramPageContainer>
+            <SelectProgramPrompt />
+            <ProgramScrollView>
+                {listItems}
+            </ProgramScrollView>
+        </ProgramPageContainer>
+    )
+}
 
 const mapStateToProps = (state) => ({
     programsList: getProgramsList(state)

@@ -7,3 +7,8 @@ export const ProgramPageContainer = styled.View`
   flex-direction: column;
   background-color: #595b68;
 `
+
+export const ProgramScrollView = styled.ScrollView`
+  flex: 1;
+  flex-grow: 10;
+`
