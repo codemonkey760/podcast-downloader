@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import {Alert, TouchableOpacity} from 'react-native'
+import { useSelector } from 'react-redux';
+import { Alert, TouchableOpacity } from 'react-native'
+import { getProgram } from '../../selectors/programs'
 
 import {
     PodcastListItemView,
@@ -12,9 +14,10 @@ import downloadPodcast from "../../Helpers/Downloader";
 
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
-function PodcastListItem({ id, imageUrl, title }) {
+function PodcastListItem({ programId, id, imageUrl, title }) {
     const [isDownloading, setIsDownloading] = useState(false)
     const [percent, setPercent] = useState(0)
+    const program = useSelector(state => getProgram(state, programId))
 
     const progressCallback = ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
         const percent = Math.round((totalBytesWritten / totalBytesExpectedToWrite) * 100)
@@ -23,7 +26,7 @@ function PodcastListItem({ id, imageUrl, title }) {
     }
 
     const errorCallback = (error) => {
-        errorAlert(`An error occurred while trying to download podcast with id ${id}`)
+        errorAlert(`An error occurred while trying to download podcast with id ${id}: ${error.message}`)
     }
 
     const onPressHandler = async () => {
@@ -33,7 +36,7 @@ function PodcastListItem({ id, imageUrl, title }) {
 
         setIsDownloading(true)
 
-        await downloadPodcast(id, title, progressCallback, () => {}, errorCallback);
+        await downloadPodcast(program, id, title, progressCallback, () => {}, errorCallback);
 
         setIsDownloading(false)
     }
