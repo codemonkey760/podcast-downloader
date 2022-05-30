@@ -12,7 +12,7 @@ const streamUrlReducer = response => (response['items'][0]['streamUrl']);
 const getFileExtFromStreamUrl = streamUrl => (streamUrl.split('/').pop().split('?')[0].split('.').pop());
 
 const getFileName = (ext, podcastId, title) => {
-    const jkTitleRegex = new RegExp("^John and Ken Show Hour (\\d+) \\((\\d+)/(\\d+)\\)$")
+    const jkTitleRegex = new RegExp("^John & Ken Show Hour (\\d+) \\((\\d+)/(\\d+)\\)$")
     const fileNamePattern = "jk-$2$3-hr$1"
 
     if (title.match(jkTitleRegex)) {
