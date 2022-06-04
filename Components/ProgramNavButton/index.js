@@ -1,8 +1,9 @@
 import React from 'react'
+import { TouchableOpacity } from 'react-native'
 
 import {
-    Container,
-    Text
+    Text,
+    TouchableOpacityStyles
 } from './styles'
 
 const getButtonTextFromType = (buttonType) => {
@@ -16,11 +17,11 @@ const getButtonTextFromType = (buttonType) => {
     return '...'
 }
 
-function ProgramNavButton ({ buttonType }) {
+function ProgramNavButton ({ buttonType, onPress }) {
     return (
-        <Container>
+        <TouchableOpacity style={TouchableOpacityStyles} onPress={onPress}>
             <Text>{getButtonTextFromType(buttonType)}</Text>
-        </Container>
+        </TouchableOpacity>
     )
 }
 

@@ -1,9 +1,10 @@
 import styled from '@emotion/native'
 
-export const Container = styled.View`
-  background-color: red;
-  flex-grow: 2;
-`
+export const TouchableOpacityStyles = {
+  backgroundColor: "red",
+  paddingLeft: 10,
+  paddingRight: 10,
+}
 
 export const Text = styled.Text`
   font-size: 24px;
