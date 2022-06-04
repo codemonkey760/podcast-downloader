@@ -9,7 +9,8 @@ import {
 const SelectProgramPrompt = () => (
     <SelectProgramPromptContainer>
         <SelectProgramPromptHeader>Select a Program</SelectProgramPromptHeader>
-        <SelectProgramPromptText>Touch a program from the available selections to download podcasts for that program</SelectProgramPromptText>
+        <SelectProgramPromptText>Touch the left arrow for a program to config it</SelectProgramPromptText>
+        <SelectProgramPromptText>Touch the right arrow for a program to download podcasts for that program</SelectProgramPromptText>
     </SelectProgramPromptContainer>
 )
 
