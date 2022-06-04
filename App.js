@@ -5,8 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider } from 'react-redux'
 import { legacy_createStore } from 'redux'
 
-import PodcastListPage from './Components/PodcastListPage'
 import ProgramPage from './Components/ProgramPage'
+import ConfigureProgramPage from './Components/ConfigureProgramPage'
+import PodcastListPage from './Components/PodcastListPage'
+
 import reducers from './reducers/reducers'
 
 // TODO: redux toolkit looks promising ... study that when I have time
@@ -21,6 +23,7 @@ export default function App() {
           <NavigationContainer>
               <Stack.Navigator screenOptions={{headerShown: false}}>
                   <Stack.Screen name="ProgramPage" component={ProgramPage} />
+                  <Stack.Screen name="ConfigureProgramPage" component={ConfigureProgramPage} />
                   <Stack.Screen name="PodcastListPage" component={PodcastListPage} />
               </Stack.Navigator>
               <StatusBar style="auto" />

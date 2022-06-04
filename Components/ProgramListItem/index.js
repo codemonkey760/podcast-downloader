@@ -24,7 +24,12 @@ function ProgramListItem({ programId, name }) {
     }
 
     const onLeftPress = () => {
-        errorAlert(`Not yet implemented but program id was: ${programId}`)
+        nav.navigate({
+            name: 'ConfigureProgramPage',
+            params: {
+                programId: programId
+            }
+        })
     }
 
     return (
