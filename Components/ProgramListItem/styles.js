@@ -15,5 +15,4 @@ export const ProgramTitle = styled.Text`
   color: #0b0c10;
   text-align: center;
   flex-grow: 4;
-  background-color: blue;
 `

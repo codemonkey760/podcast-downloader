@@ -1,7 +1,6 @@
 import styled from '@emotion/native'
 
 export const TouchableOpacityStyles = {
-  backgroundColor: "red",
   paddingLeft: 10,
   paddingRight: 10,
 }
