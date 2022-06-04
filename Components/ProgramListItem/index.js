@@ -2,6 +2,8 @@ import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
+import ProgramNavButton from '../ProgramNavButton'
+
 import {
     ProgramListItemContainer,
     ProgramTitle
@@ -22,7 +24,9 @@ function ProgramListItem({ programId, name }) {
     return (
         <TouchableOpacity onPress={onPress}>
             <ProgramListItemContainer>
+                <ProgramNavButton buttonType={'left'} />
                 <ProgramTitle>{name}</ProgramTitle>
+                <ProgramNavButton buttonType={'right'} />
             </ProgramListItemContainer>
         </TouchableOpacity>
     )
