@@ -1,5 +1,7 @@
 import styled from '@emotion/native'
 
+import { TouchableOpacity } from 'react-native'
+
 export const Container = styled.View`
   margin-top: 25px;
   width: 100%;
@@ -23,8 +25,9 @@ export const DetailHeader = styled.Text`
   color: #d32415;
 `
 
-export const DetailText = styled.Text`
-  margin-bottom: 10px;
+export const DetailTextInput = styled.TextInput`
+  margin: 5px 25px 5px 25px;
   text-align: center;
-  color: #0b0c10;
+  color: black;
+  background-color: #eef5fb;
 `

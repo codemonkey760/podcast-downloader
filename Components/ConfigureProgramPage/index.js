@@ -1,39 +1,41 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { TextInput } from 'react-native'
 
 import { getProgram } from '../../selectors/programs'
-import { View, Text } from 'react-native'
 
 import {
     Container,
     Form,
     DetailHeader,
-    DetailText
+    DetailTextInput
 } from './styles'
 
 function ConfigureProgramPage({ route }) {
     const { programId } = route.params
     const program = useSelector(state => getProgram(state, programId))
 
+    const [name, setName] = useState(program.name)
+
     return (
         <Container>
             <Form>
                 <DetailHeader>ID</DetailHeader>
-                <DetailText>{programId}</DetailText>
+                <DetailTextInput>{programId}</DetailTextInput>
                 <DetailHeader>Name</DetailHeader>
-                <DetailText>{program.name}</DetailText>
+                <DetailTextInput value={name} onChangeText={setName}></DetailTextInput>
                 <DetailHeader>Naming Mode</DetailHeader>
-                <DetailText>{program.namingMode.description}</DetailText>
+                <DetailTextInput>{program.namingMode.description}</DetailTextInput>
                 {program.titleRegex && (
                     <>
                         <DetailHeader>Title Regex</DetailHeader>
-                        <DetailText>{program.titleRegex}</DetailText>
+                        <DetailTextInput>{program.titleRegex}</DetailTextInput>
                     </>
                 )}
                 {program.fileNamePattern && (
                     <>
                         <DetailHeader>File Name Pattern</DetailHeader>
-                        <DetailText>{`${program.fileNamePattern}.{ext}`}</DetailText>
+                        <DetailTextInput>{`${program.fileNamePattern}.{ext}`}</DetailTextInput>
                     </>
                 )}
             </Form>
