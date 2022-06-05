@@ -1,6 +1,5 @@
 import styled from '@emotion/native'
-
-import { TouchableOpacity } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export const Container = styled.View`
   margin-top: 25px;
@@ -10,7 +9,7 @@ export const Container = styled.View`
   background-color: #595b68;
 `
 
-export const Form = styled.View`
+export const Form = styled(KeyboardAwareScrollView)`
   margin: 5px;
   border-radius: 5px;
   background-color: #bdc8d3;
