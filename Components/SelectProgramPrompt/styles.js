@@ -12,11 +12,11 @@ export const SelectProgramPromptContainer = styled.View`
 export const SelectProgramPromptHeader = styled.Text`
   text-align: center;
   font-weight: bold;
+  margin-bottom: 5px;
   color: #0b0c10;
 `
 
 export const SelectProgramPromptText = styled.Text`
-  margin-top: 5px;
   text-align: center;
   color: #5e5f62;
   font-size: 12px;
