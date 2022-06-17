@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { getProgram } from '../../selectors/programs'
 
@@ -8,14 +7,20 @@ import {
     Container,
     Form,
     DetailHeader,
-    DetailTextInput
+    DetailTextInput,
+    ButtonBox,
+    Button
 } from './styles'
 
-function ConfigureProgramPage({ route }) {
+function ConfigureProgramPage({ navigation, route }) {
     const { programId } = route.params
     const program = useSelector(state => getProgram(state, programId))
 
     const [name, setName] = useState(program.name)
+
+    const onDiscardPress = () => {
+        navigation.pop()
+    }
 
     return (
         <Container>
@@ -38,6 +43,10 @@ function ConfigureProgramPage({ route }) {
                         <DetailTextInput>{`${program.fileNamePattern}.{ext}`}</DetailTextInput>
                     </>
                 )}
+                <ButtonBox>
+                    <Button title={'DISCARD'} onPress={onDiscardPress}/>
+                    <Button title={'SAVE'} />
+                </ButtonBox>
             </Form>
         </Container>
     )

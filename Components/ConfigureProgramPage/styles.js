@@ -30,3 +30,17 @@ export const DetailTextInput = styled.TextInput`
   color: black;
   background-color: #eef5fb;
 `
+
+export const ButtonBox = styled.View`
+  margin: 5px 25px 5px 25px;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+export const Button = styled.Button`
+  border-radius: 5px;
+  margin: 5px;
+  width: 100%;
+  align-items: center;
+`
