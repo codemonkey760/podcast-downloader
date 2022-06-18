@@ -1,16 +1,20 @@
 import React from 'react'
-import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+
+import ProgramNavButton from '../ProgramNavButton'
 
 import {
     ProgramListItemContainer,
     ProgramTitle
 } from './styles'
+import {Alert} from "react-native";
+
+const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
 function ProgramListItem({ programId, name }) {
     const nav = useNavigation()
 
-    const onPress = () => {
+    const onRightPress = () => {
         nav.navigate({
             name: 'PodcastListPage',
             params: {
@@ -19,12 +23,21 @@ function ProgramListItem({ programId, name }) {
         })
     }
 
+    const onLeftPress = () => {
+        nav.navigate({
+            name: 'ConfigureProgramPage',
+            params: {
+                programId: programId
+            }
+        })
+    }
+
     return (
-        <TouchableOpacity onPress={onPress}>
-            <ProgramListItemContainer>
-                <ProgramTitle>{name}</ProgramTitle>
-            </ProgramListItemContainer>
-        </TouchableOpacity>
+        <ProgramListItemContainer>
+            <ProgramNavButton buttonType={'left'} onPress={onLeftPress} />
+            <ProgramTitle>{name}</ProgramTitle>
+            <ProgramNavButton buttonType={'right'} onPress={onRightPress} />
+        </ProgramListItemContainer>
     )
 }
 

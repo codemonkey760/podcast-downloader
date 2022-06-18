@@ -6,7 +6,7 @@ export const PodcastListItemView = styled.View`
   flex: 1;
   flex-direction: column;
   background-color: #bdc8d3;
-  margin: 10px 10px 0px 10px;
+  margin: 10px 10px 0 10px;
   padding: 10px;
   border-radius: 15px;
 `;
@@ -40,4 +40,12 @@ export const DownloadBar = styled.View`
   width: ${props => props.percent + '%'};
   position: relative;
   top: 8px;
+`
+
+export const FileNameText = styled.Text`
+  color: #444;
+  font-size: 8px;
+  position: relative;
+  top: 8px;
+  text-align: center;
 `

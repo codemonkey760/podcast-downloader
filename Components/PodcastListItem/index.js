@@ -2,13 +2,15 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Alert, TouchableOpacity } from 'react-native'
 import { getProgram } from '../../selectors/programs'
+import { getSimpleFileName } from '../../Util/Namer'
 
 import {
     PodcastListItemView,
     PodcastIcon,
     PodcastTitle,
     DownloadBar,
-    TitleAndPic
+    TitleAndPic,
+    FileNameText,
 } from './styles';
 import downloadPodcast from "../../Helpers/Downloader";
 
@@ -18,6 +20,8 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
     const [isDownloading, setIsDownloading] = useState(false)
     const [percent, setPercent] = useState(0)
     const program = useSelector(state => getProgram(state, programId))
+
+    const fileName = getSimpleFileName(program, id, title)
 
     const progressCallback = ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
         const percent = Math.round((totalBytesWritten / totalBytesExpectedToWrite) * 100)
@@ -50,6 +54,9 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
                 </TitleAndPic>
                 {(percent > 0) && (
                     <DownloadBar percent={percent} />
+                )}
+                {(percent <= 0) && (
+                    <FileNameText>{fileName}</FileNameText>
                 )}
             </PodcastListItemView>
         </TouchableOpacity>
