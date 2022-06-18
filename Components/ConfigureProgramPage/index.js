@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { getProgram } from '../../selectors/programs'
+import { updateProgram } from '../../actions/programs'
 
 import {
     Container,
@@ -15,11 +16,25 @@ import {
 function ConfigureProgramPage({ navigation, route }) {
     const { programId } = route.params
     const program = useSelector(state => getProgram(state, programId))
+    const dispatch = useDispatch()
 
     const [name, setName] = useState(program.name)
+    const [titleRegex, setTitleRegex] = useState(program.titleRegex)
+    const [fileNamePattern, setFileNamePattern] = useState(program.fileNamePattern)
 
     const onDiscardPress = () => {
-        navigation.pop()
+        navigation.navigate({name: 'ProgramPage'})
+    }
+
+    const onSavePress = () => {
+        dispatch(updateProgram(
+            programId,
+            name,
+            program.namingMode,
+            titleRegex,
+            fileNamePattern
+        ))
+        navigation.navigate({name: 'ProgramPage'})
     }
 
     return (
@@ -28,24 +43,16 @@ function ConfigureProgramPage({ navigation, route }) {
                 <DetailHeader>ID</DetailHeader>
                 <DetailTextInput>{programId}</DetailTextInput>
                 <DetailHeader>Name</DetailHeader>
-                <DetailTextInput value={name} onChangeText={setName}></DetailTextInput>
+                <DetailTextInput value={name} onChangeText={setName} />
                 <DetailHeader>Naming Mode</DetailHeader>
                 <DetailTextInput>{program.namingMode.description}</DetailTextInput>
-                {program.titleRegex && (
-                    <>
-                        <DetailHeader>Title Regex</DetailHeader>
-                        <DetailTextInput>{program.titleRegex}</DetailTextInput>
-                    </>
-                )}
-                {program.fileNamePattern && (
-                    <>
-                        <DetailHeader>File Name Pattern</DetailHeader>
-                        <DetailTextInput>{`${program.fileNamePattern}.{ext}`}</DetailTextInput>
-                    </>
-                )}
+                <DetailHeader>Title Regex</DetailHeader>
+                <DetailTextInput value={titleRegex} onChangeText={setTitleRegex} />
+                <DetailHeader>File Name Pattern</DetailHeader>
+                <DetailTextInput value={fileNamePattern} onChangeText={setFileNamePattern} />
                 <ButtonBox>
-                    <Button title={'DISCARD'} onPress={onDiscardPress}/>
-                    <Button title={'SAVE'} />
+                    <Button title={'DISCARD'} onPress={onDiscardPress} />
+                    <Button title={'SAVE'} onPress={onSavePress} />
                 </ButtonBox>
             </Form>
         </Container>
