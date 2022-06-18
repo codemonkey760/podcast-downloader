@@ -2,10 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { getProgramsList } from '../../selectors/programs'
+import { VersionNumber } from '../../Util/Verison'
 
 import {
     ProgramPageContainer,
-    ProgramScrollView
+    ProgramScrollView,
+    VersionText,
 } from './styles'
 
 import SelectProgramPrompt from '../SelectProgramPrompt'
@@ -28,6 +30,7 @@ const ProgramPage = ({ programsList }) => {
             <ProgramScrollView>
                 {listItems}
             </ProgramScrollView>
+            <VersionText>Version: {VersionNumber}</VersionText>
         </ProgramPageContainer>
     )
 }
