@@ -12,3 +12,9 @@ export const ProgramScrollView = styled.ScrollView`
   flex: 1;
   flex-grow: 10;
 `
+
+export const VersionText = styled.Text`
+  text-align: center;
+  font-size: 12px;
+  color: #333;
+`
