@@ -8,7 +8,8 @@ import {
     PodcastIcon,
     PodcastTitle,
     DownloadBar,
-    TitleAndPic
+    TitleAndPic,
+    FileNameText,
 } from './styles';
 import downloadPodcast from "../../Helpers/Downloader";
 
@@ -50,6 +51,9 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
                 </TitleAndPic>
                 {(percent > 0) && (
                     <DownloadBar percent={percent} />
+                )}
+                {(percent <= 0) && (
+                    <FileNameText>AAAAHHHHH!!!!!</FileNameText>
                 )}
             </PodcastListItemView>
         </TouchableOpacity>
