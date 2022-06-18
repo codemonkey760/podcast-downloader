@@ -1,5 +1,6 @@
 import styled from '@emotion/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Picker } from '@react-native-picker/picker'
 
 export const Container = styled.View`
   margin-top: 25px;
@@ -29,6 +30,15 @@ export const DetailTextInput = styled.TextInput`
   text-align: center;
   color: black;
   background-color: #eef5fb;
+`
+
+export const DetailPicker = styled(Picker)`
+  margin: 5px 25px 5px 25px;
+  background-color: #eef5fb;
+`
+
+export const DetailPickerItem = styled(Picker.Item)`
+  
 `
 
 export const ButtonBox = styled.View`

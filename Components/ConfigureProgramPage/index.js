@@ -3,12 +3,15 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { getProgram } from '../../selectors/programs'
 import { updateProgram } from '../../actions/programs'
+import { NamingMode } from '../../Util/Namer'
 
 import {
     Container,
     Form,
     DetailHeader,
     DetailTextInput,
+    DetailPicker,
+    DetailPickerItem,
     ButtonBox,
     Button
 } from './styles'
@@ -19,8 +22,13 @@ function ConfigureProgramPage({ navigation, route }) {
     const dispatch = useDispatch()
 
     const [name, setName] = useState(program.name)
+    const [namingMode, setNamingModeRaw] = useState(program.namingMode)
     const [titleRegex, setTitleRegex] = useState(program.titleRegex)
     const [fileNamePattern, setFileNamePattern] = useState(program.fileNamePattern)
+
+    const setNamingMode = (newNamingMode, modeIndex) => {
+        setNamingModeRaw(NamingMode[newNamingMode])
+    }
 
     const onDiscardPress = () => {
         navigation.navigate({name: 'ProgramPage'})
@@ -30,7 +38,7 @@ function ConfigureProgramPage({ navigation, route }) {
         dispatch(updateProgram(
             programId,
             name,
-            program.namingMode,
+            namingMode,
             titleRegex,
             fileNamePattern
         ))
@@ -45,7 +53,10 @@ function ConfigureProgramPage({ navigation, route }) {
                 <DetailHeader>Name</DetailHeader>
                 <DetailTextInput value={name} onChangeText={setName} />
                 <DetailHeader>Naming Mode</DetailHeader>
-                <DetailTextInput>{program.namingMode.description}</DetailTextInput>
+                <DetailPicker selectedValue={namingMode.description} onValueChange={setNamingMode}>
+                    <DetailPickerItem value={NamingMode.NONE.description} label={'None'}/>
+                    <DetailPickerItem value={NamingMode.TITLE_REGEX.description} label={'Title Regex'}/>
+                </DetailPicker>
                 <DetailHeader>Title Regex</DetailHeader>
                 <DetailTextInput value={titleRegex} onChangeText={setTitleRegex} />
                 <DetailHeader>File Name Pattern</DetailHeader>
