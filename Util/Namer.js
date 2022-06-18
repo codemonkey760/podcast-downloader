@@ -1,6 +1,6 @@
 export const NamingMode = Object.freeze({
-    TITLE_REGEX: Symbol('title_regex'),
-    NONE: Symbol('none')
+    TITLE_REGEX: Symbol('TITLE_REGEX'),
+    NONE: Symbol('NONE')
 })
 
 function getFileExtFromStreamUrl(streamUrl) {
