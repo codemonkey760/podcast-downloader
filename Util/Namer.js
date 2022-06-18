@@ -9,30 +9,34 @@ function getFileExtFromStreamUrl(streamUrl) {
     return (ext) ? ext : 'mp3'
 }
 
-function getFallBackFileName(podcastId, ext) {
-    return podcastId + '.' + ext
+function getFallBackFileName(podcastId) {
+    return podcastId
 }
 
-function getTitleRegexFileName(titleRegex, fileNamePattern, title, podcastId, ext) {
+function getTitleRegexFileName(titleRegex, fileNamePattern, title, podcastId) {
     if (!titleRegex || !fileNamePattern) {
-        return getFallBackFileName(podcastId, ext)
+        return getFallBackFileName(podcastId)
     }
 
     if (title.match(titleRegex)) {
-        return title.replace(titleRegex, fileNamePattern) + '.' + ext
+        return title.replace(titleRegex, fileNamePattern)
     } else {
-        return getFallBackFileName(podcastId, ext)
+        return getFallBackFileName(podcastId)
     }
 }
 
 export function getFileName(program, podcastId, title, streamUrl) {
-    const mode = program.namingMode ?? NamingMode.NONE
-
     const ext = getFileExtFromStreamUrl(streamUrl)
 
+    return getSimpleFileName(program, podcastId, title) + '.' + ext
+}
+
+export function getSimpleFileName(program, podcastId, title) {
+    const mode = program.namingMode ?? NamingMode.NONE
+
     if (mode === NamingMode.NONE) {
-        return getFallBackFileName(podcastId, ext)
+        return getFallBackFileName(podcastId)
     } else if (mode === NamingMode.TITLE_REGEX) {
-        return getTitleRegexFileName(new RegExp(program.titleRegex), program.fileNamePattern, title, podcastId, ext)
+        return getTitleRegexFileName(new RegExp(program.titleRegex), program.fileNamePattern, title, podcastId)
     }
 }
