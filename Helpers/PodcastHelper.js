@@ -6,6 +6,6 @@ export async function getPodcastsForProgram(programId, limit) {
     return response.map(reducePodcast);
 }
 
-function reducePodcast({id, title, startDate, imageUrl}) {
-    return {id, title, startDate, imageUrl}
+function reducePodcast({id, title, startDate, imageUrl, description}) {
+    return {id, title, startDate, imageUrl, description}
 }
