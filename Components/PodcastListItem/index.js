@@ -5,11 +5,12 @@ import { getProgram } from '../../selectors/programs'
 import { getSimpleFileName } from '../../Util/Namer'
 
 import {
-    PodcastListItemView,
-    PodcastIcon,
-    PodcastTitle,
+    Container,
+    Icon,
+    Title,
+    DetailsLink,
     DownloadBar,
-    TitleAndPic,
+    Details,
     FileNameText,
 } from './styles';
 import downloadPodcast from "../../Helpers/Downloader";
@@ -47,18 +48,19 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
 
     return (
         <TouchableOpacity onPress={onPressHandler}>
-            <PodcastListItemView>
-                <TitleAndPic>
-                    <PodcastIcon source={{uri: imageUrl}} alt={'podcast'} />
-                    <PodcastTitle>{title}</PodcastTitle>
-                </TitleAndPic>
+            <Container>
+                <Details>
+                    <Icon source={{uri: imageUrl}} alt={'podcast'} />
+                    <Title>{title}</Title>
+                    <DetailsLink>I</DetailsLink>
+                </Details>
                 {(percent > 0) && (
                     <DownloadBar percent={percent} />
                 )}
                 {(percent <= 0) && (
                     <FileNameText>{fileName}</FileNameText>
                 )}
-            </PodcastListItemView>
+            </Container>
         </TouchableOpacity>
     );
 }
