@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Alert, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { getProgram } from '../../selectors/programs'
 import { getSimpleFileName } from '../../Util/Namer'
 
@@ -18,6 +19,7 @@ import downloadPodcast from "../../Helpers/Downloader";
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
 function PodcastListItem({ programId, id, imageUrl, title }) {
+    const navigation = useNavigation()
     const [isDownloading, setIsDownloading] = useState(false)
     const [percent, setPercent] = useState(0)
     const program = useSelector(state => getProgram(state, programId))
@@ -47,7 +49,7 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
     }
 
     const onInfoPressHandler = () => {
-        alert('INFO!')
+        navigation.navigate({ name: 'PodcastDetailsPage' })
     }
 
     return (
