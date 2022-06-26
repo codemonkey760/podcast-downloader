@@ -8,7 +8,7 @@ export const Container = styled.View`
   flex-direction: column;
 `
 
-export const DetailBox = styled.Text`
+export const DetailBox = styled.View`
   margin: 5px;
   border-radius: 5px;
   background-color: #bdc8d3;
@@ -19,8 +19,6 @@ export const DetailBox = styled.Text`
 `
 
 export const DetailHeader = styled.Text`
-  flex: 1;
-  background: red;
 `
 
 export const DetailText = styled.Text`
