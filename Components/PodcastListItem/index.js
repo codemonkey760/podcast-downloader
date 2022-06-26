@@ -34,7 +34,7 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
         errorAlert(`An error occurred while trying to download podcast with id ${id}: ${error.message}`)
     }
 
-    const onPressHandler = async () => {
+    const onTitlePressHandler = async () => {
         if (isDownloading) {
             return;
         }
@@ -46,22 +46,28 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
         setIsDownloading(false)
     }
 
+    const onInfoPressHandler = () => {
+        alert('INFO!')
+    }
+
     return (
-        <TouchableOpacity onPress={onPressHandler}>
-            <Container>
-                <Details>
-                    <Icon source={{uri: imageUrl}} alt={'podcast'} />
+        <Container>
+            <Details>
+                <Icon source={{uri: imageUrl}} alt={'podcast'} />
+                <TouchableOpacity onPress={onTitlePressHandler}>
                     <Title>{title}</Title>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onInfoPressHandler}>
                     <DetailsLink>I</DetailsLink>
-                </Details>
-                {(percent > 0) && (
-                    <DownloadBar percent={percent} />
-                )}
-                {(percent <= 0) && (
-                    <FileNameText>{fileName}</FileNameText>
-                )}
-            </Container>
-        </TouchableOpacity>
+                </TouchableOpacity>
+            </Details>
+            {(percent > 0) && (
+                <DownloadBar percent={percent} />
+            )}
+            {(percent <= 0) && (
+                <FileNameText>{fileName}</FileNameText>
+            )}
+        </Container>
     );
 }
 

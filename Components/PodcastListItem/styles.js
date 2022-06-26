@@ -14,6 +14,7 @@ export const Container = styled.View`
 export const Details = styled.View`
   flex: 1;
   flex-direction: row;
+  justify-content: space-between;
 `
 
 export const Icon = styled.Image`
@@ -22,9 +23,7 @@ export const Icon = styled.Image`
 `;
 
 export const Title = styled.Text`
-  flex: 1;
   height: 50px;
-  justify-content: center;
   text-align-vertical: center;
   text-align: center;
   color: #0b0c10;
