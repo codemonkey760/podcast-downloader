@@ -12,16 +12,19 @@ export const DetailBox = styled.View`
   margin: 5px;
   border-radius: 5px;
   background-color: #bdc8d3;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding: 5px;
   flex: 1;
   flex-direction: column;
 `
 
 export const DetailHeader = styled.Text`
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
 `
 
 export const DetailText = styled.Text`
+  text-align: center;
 `
 
 export const BackButton = styled.Button`
