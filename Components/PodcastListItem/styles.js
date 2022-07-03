@@ -1,4 +1,5 @@
 import styled from '@emotion/native';
+import { TouchableOpacity } from 'react-native'
 
 export const Container = styled.View`
   max-height: 70px;
@@ -18,25 +19,34 @@ export const Details = styled.View`
 `
 
 export const Icon = styled.Image`
+  flex-grow: 1;
   width: 50px;
   height: 50px;
+  flex-grow: 1;
 `;
 
-export const Title = styled.Text`
+export const TouchableTitle = styled(TouchableOpacity)`
+  width: 67%;
   height: 50px;
+`
+
+export const Title = styled.Text`
   text-align-vertical: center;
   text-align: center;
   color: #0b0c10;
 `;
 
-export const DetailsLink = styled.Text`
+export const TouchableDetailsLink = styled(TouchableOpacity)`
   width: 50px;
   height: 50px;
+  background-color: #adb8c3;
+  border-radius: 5px;
+`
+
+export const DetailsLink = styled.Text`
   font-size: 50px;
   text-align: center;
   font-family: serif;
-  background-color: #adb8c3;
-  border-radius: 5px;
 `;
 
 export const DownloadBar = styled.View`

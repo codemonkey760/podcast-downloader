@@ -13,6 +13,8 @@ import {
     DownloadBar,
     Details,
     FileNameText,
+    TouchableTitle,
+    TouchableDetailsLink
 } from './styles';
 import downloadPodcast from "../../Helpers/Downloader";
 
@@ -65,12 +67,12 @@ function PodcastListItem({ programId, id, imageUrl, title, description }) {
         <Container>
             <Details>
                 <Icon source={{uri: imageUrl}} alt={'podcast'} />
-                <TouchableOpacity onPress={onTitlePressHandler}>
+                <TouchableTitle onPress={onTitlePressHandler}>
                     <Title>{title}</Title>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={onInfoPressHandler}>
+                </TouchableTitle>
+                <TouchableDetailsLink onPress={onInfoPressHandler}>
                     <DetailsLink>I</DetailsLink>
-                </TouchableOpacity>
+                </TouchableDetailsLink>
             </Details>
             {(percent > 0) && (
                 <DownloadBar percent={percent} />
