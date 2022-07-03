@@ -18,7 +18,7 @@ import downloadPodcast from "../../Helpers/Downloader";
 
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
-function PodcastListItem({ programId, id, imageUrl, title }) {
+function PodcastListItem({ programId, id, imageUrl, title, description }) {
     const navigation = useNavigation()
     const [isDownloading, setIsDownloading] = useState(false)
     const [percent, setPercent] = useState(0)
@@ -49,7 +49,16 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
     }
 
     const onInfoPressHandler = () => {
-        navigation.navigate({ name: 'PodcastDetailsPage' })
+        navigation.navigate({
+            name: 'PodcastDetailsPage',
+            params: {
+                podcastId: id,
+                title,
+                description,
+                imageUrl,
+                fileName
+            }
+        })
     }
 
     return (

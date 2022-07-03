@@ -3,7 +3,8 @@ import {
     DetailBox,
     DetailHeader,
     DetailText,
-    BackButton
+    BackButton,
+    PodcastIcon
 } from './styles'
 
 function PodcastDetailsPage({navigation, route}) {
@@ -11,13 +12,20 @@ function PodcastDetailsPage({navigation, route}) {
         navigation.navigate({name: 'ProgramPage'})
     }
 
+    const { podcastId, title, description, imageUrl, fileName } = route.params
+
     return (
         <Container>
             <DetailBox>
+                <PodcastIcon source={{uri: imageUrl}} alt={'podcast'} />
                 <DetailHeader>Podcast ID:</DetailHeader>
-                <DetailText>Something</DetailText>
+                <DetailText>{podcastId}</DetailText>
+                <DetailHeader>Title:</DetailHeader>
+                <DetailText>{title}</DetailText>
+                <DetailHeader>File name:</DetailHeader>
+                <DetailText>{fileName}</DetailText>
                 <DetailHeader>Description:</DetailHeader>
-                <DetailText>Long description</DetailText>
+                <DetailText>{description}</DetailText>
             </DetailBox>
             <BackButton title='Back' onPress={ onPressHandler } />
         </Container>

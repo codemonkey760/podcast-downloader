@@ -15,6 +15,7 @@ export const DetailBox = styled.View`
   padding: 5px;
   flex: 1;
   flex-direction: column;
+  align-items: center;
 `
 
 export const DetailHeader = styled.Text`
@@ -30,3 +31,9 @@ export const DetailText = styled.Text`
 export const BackButton = styled.Button`
   
 `
+
+export const PodcastIcon = styled.Image`
+  width: 150px;
+  height: 150px;
+  background-color: red;
+`;
