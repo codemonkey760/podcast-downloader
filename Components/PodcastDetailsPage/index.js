@@ -9,7 +9,7 @@ import {
 
 function PodcastDetailsPage({navigation, route}) {
     const onPressHandler = () => {
-        navigation.navigate({name: 'ProgramPage'})
+        navigation.pop()
     }
 
     const { podcastId, title, description, imageUrl, fileName } = route.params
