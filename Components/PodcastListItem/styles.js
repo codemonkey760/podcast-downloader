@@ -34,6 +34,9 @@ export const DetailsLink = styled.Text`
   height: 50px;
   font-size: 50px;
   text-align: center;
+  font-family: serif;
+  background-color: #adb8c3;
+  border-radius: 5px;
 `;
 
 export const DownloadBar = styled.View`
