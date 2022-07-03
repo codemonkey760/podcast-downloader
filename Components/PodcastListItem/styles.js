@@ -1,6 +1,7 @@
 import styled from '@emotion/native';
+import { TouchableOpacity } from 'react-native'
 
-export const PodcastListItemView = styled.View`
+export const Container = styled.View`
   max-height: 70px;
   height: 70px;
   flex: 1;
@@ -11,23 +12,41 @@ export const PodcastListItemView = styled.View`
   border-radius: 15px;
 `;
 
-export const TitleAndPic = styled.View`
+export const Details = styled.View`
   flex: 1;
   flex-direction: row;
+  justify-content: space-between;
 `
 
-export const PodcastIcon = styled.Image`
+export const Icon = styled.Image`
+  flex-grow: 1;
   width: 50px;
   height: 50px;
+  flex-grow: 1;
 `;
 
-export const PodcastTitle = styled.Text`
-  flex: 1;
+export const TouchableTitle = styled(TouchableOpacity)`
+  width: 67%;
   height: 50px;
-  justify-content: center;
+`
+
+export const Title = styled.Text`
   text-align-vertical: center;
   text-align: center;
   color: #0b0c10;
+`;
+
+export const TouchableDetailsLink = styled(TouchableOpacity)`
+  width: 50px;
+  height: 50px;
+  background-color: #adb8c3;
+  border-radius: 5px;
+`
+
+export const DetailsLink = styled.Text`
+  font-size: 50px;
+  text-align: center;
+  font-family: serif;
 `;
 
 export const DownloadBar = styled.View`

@@ -41,8 +41,8 @@ const PodcastListPage = ({ route }) => {
 
     let listContents;
     if (podcastList.length > 0) {
-        listContents = podcastList.map(({ id, imageUrl, title }) => (
-            <PodcastListItem key={Math.random()} programId={programId} id={id} imageUrl={imageUrl} title={title} />
+        listContents = podcastList.map(({ id, imageUrl, title, description }) => (
+            <PodcastListItem key={Math.random()} programId={programId} id={id} imageUrl={imageUrl} title={title} description={description} />
         ))
     } else {
         listContents = (

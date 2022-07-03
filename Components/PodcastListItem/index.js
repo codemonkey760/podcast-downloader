@@ -1,22 +1,27 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Alert, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { getProgram } from '../../selectors/programs'
 import { getSimpleFileName } from '../../Util/Namer'
 
 import {
-    PodcastListItemView,
-    PodcastIcon,
-    PodcastTitle,
+    Container,
+    Icon,
+    Title,
+    DetailsLink,
     DownloadBar,
-    TitleAndPic,
+    Details,
     FileNameText,
+    TouchableTitle,
+    TouchableDetailsLink
 } from './styles';
 import downloadPodcast from "../../Helpers/Downloader";
 
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
-function PodcastListItem({ programId, id, imageUrl, title }) {
+function PodcastListItem({ programId, id, imageUrl, title, description }) {
+    const navigation = useNavigation()
     const [isDownloading, setIsDownloading] = useState(false)
     const [percent, setPercent] = useState(0)
     const program = useSelector(state => getProgram(state, programId))
@@ -33,7 +38,7 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
         errorAlert(`An error occurred while trying to download podcast with id ${id}: ${error.message}`)
     }
 
-    const onPressHandler = async () => {
+    const onTitlePressHandler = async () => {
         if (isDownloading) {
             return;
         }
@@ -45,21 +50,37 @@ function PodcastListItem({ programId, id, imageUrl, title }) {
         setIsDownloading(false)
     }
 
+    const onInfoPressHandler = () => {
+        navigation.navigate({
+            name: 'PodcastDetailsPage',
+            params: {
+                podcastId: id,
+                title,
+                description,
+                imageUrl,
+                fileName
+            }
+        })
+    }
+
     return (
-        <TouchableOpacity onPress={onPressHandler}>
-            <PodcastListItemView>
-                <TitleAndPic>
-                    <PodcastIcon source={{uri: imageUrl}} alt={'podcast'} />
-                    <PodcastTitle>{title}</PodcastTitle>
-                </TitleAndPic>
-                {(percent > 0) && (
-                    <DownloadBar percent={percent} />
-                )}
-                {(percent <= 0) && (
-                    <FileNameText>{fileName}</FileNameText>
-                )}
-            </PodcastListItemView>
-        </TouchableOpacity>
+        <Container>
+            <Details>
+                <Icon source={{uri: imageUrl}} alt={'podcast'} />
+                <TouchableTitle onPress={onTitlePressHandler}>
+                    <Title>{title}</Title>
+                </TouchableTitle>
+                <TouchableDetailsLink onPress={onInfoPressHandler}>
+                    <DetailsLink>I</DetailsLink>
+                </TouchableDetailsLink>
+            </Details>
+            {(percent > 0) && (
+                <DownloadBar percent={percent} />
+            )}
+            {(percent <= 0) && (
+                <FileNameText>{fileName}</FileNameText>
+            )}
+        </Container>
     );
 }
 

@@ -8,6 +8,7 @@ import { legacy_createStore } from 'redux'
 import ProgramPage from './Components/ProgramPage'
 import ConfigureProgramPage from './Components/ConfigureProgramPage'
 import PodcastListPage from './Components/PodcastListPage'
+import PodcastDetailsPage from './Components/PodcastDetailsPage'
 
 import reducers from './reducers/reducers'
 
@@ -25,6 +26,7 @@ export default function App() {
                   <Stack.Screen name="ProgramPage" component={ProgramPage} />
                   <Stack.Screen name="ConfigureProgramPage" component={ConfigureProgramPage} />
                   <Stack.Screen name="PodcastListPage" component={PodcastListPage} />
+                  <Stack.Screen name="PodcastDetailsPage" component={PodcastDetailsPage} />
               </Stack.Navigator>
               <StatusBar style="auto" />
           </NavigationContainer>
