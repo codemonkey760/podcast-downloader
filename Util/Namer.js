@@ -31,8 +31,8 @@ export function getFileName(program, podcastId, title, streamUrl) {
     const mode = program.namingMode ?? NamingMode.NONE
 
     if (mode === NamingMode.NONE) {
-        return getFallBackFileName(podcastId)
+        return getFallBackFileName(podcastId) + '.' + ext
     } else if (mode === NamingMode.TITLE_REGEX) {
-        return getTitleRegexFileName(new RegExp(program.titleRegex), program.fileNamePattern, title, podcastId)
+        return getTitleRegexFileName(new RegExp(program.titleRegex), program.fileNamePattern, title, podcastId) + '.' + ext
     }
 }
