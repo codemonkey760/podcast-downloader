@@ -1,0 +1,16 @@
+Feature "Make naming great again"
+x --> refactor podcast querying so that stream urls are available sooner
+x --> refactor filename generation so that the concept of a "simple" file name is eliminated
+--> extract context from podcast data structure and supply it to namer
+--> extract ordinal from podcast list and supply it to namer
+--> remove the concept of naming mode
+--> apply title regex
+--> apply context operators
+
+{ext}  filename extension determined by streamurl defaults to 'mp3'
+{ord}  the podcast's position in the query list
+{r_ord} same as {ord} but reversed
+{year_local} {month_local} {day_local} start date converted to local time
+{year} {month} {day} start date not converted at all, iheart usually sends these as UTC
+{id} podcast id
+$1, $2, ... matched groups from title regex
