@@ -3,7 +3,7 @@ import { getPodcastDetails, getProgramPodcasts } from '../Util/PodcastClient'
 
 function getStreamUrlFromDetails(id, podcastDetails) {
     for (let i = 0; i < podcastDetails.length; ++i) {
-        if (podcastDetails[i].podcastId === id) {
+        if (podcastDetails[i].content.id === id) {
             return podcastDetails[i].streamUrl;
         }
     }
@@ -19,6 +19,8 @@ function addStreamUrlsFromDetailsResponse(podcastList, podcastDetails) {
     for (let i = 0; i < podcastList.length; ++i) {
         podcastList[i].streamUrl = getStreamUrlFromDetails(podcastList[i].id, podcastDetails)
     }
+
+    return podcastList
 }
 
 export async function getPodcastsForProgram(programId, limit) {
