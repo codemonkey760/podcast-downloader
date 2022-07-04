@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
-import { Alert, TouchableOpacity } from 'react-native'
+import { useSelector } from 'react-redux'
+import { Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { getProgram } from '../../selectors/programs'
-import { getSimpleFileName } from '../../Util/Namer'
+import { getFileName } from '../../Util/Namer'
 
 import {
     Container,
@@ -15,18 +15,19 @@ import {
     FileNameText,
     TouchableTitle,
     TouchableDetailsLink
-} from './styles';
-import downloadPodcast from "../../Helpers/Downloader";
+} from './styles'
+
+import downloadPodcast from '../../Helpers/Downloader'
 
 const errorAlert = (error) => Alert.alert('Error', error, [{text: 'OK'}])
 
-function PodcastListItem({ programId, id, imageUrl, title, description }) {
+function PodcastListItem({ programId, id, imageUrl, title, description, streamUrl }) {
     const navigation = useNavigation()
     const [isDownloading, setIsDownloading] = useState(false)
     const [percent, setPercent] = useState(0)
     const program = useSelector(state => getProgram(state, programId))
 
-    const fileName = getSimpleFileName(program, id, title)
+    const fileName = getFileName(program, id, title, streamUrl)
 
     const progressCallback = ({ totalBytesWritten, totalBytesExpectedToWrite }) => {
         const percent = Math.round((totalBytesWritten / totalBytesExpectedToWrite) * 100)
@@ -45,7 +46,7 @@ function PodcastListItem({ programId, id, imageUrl, title, description }) {
 
         setIsDownloading(true)
 
-        await downloadPodcast(program, id, title, progressCallback, () => {}, errorCallback);
+        await downloadPodcast(program, id, fileName, progressCallback, () => {}, errorCallback);
 
         setIsDownloading(false)
     }
