@@ -46,7 +46,7 @@ function PodcastListItem({ programId, id, imageUrl, title, description, streamUr
 
         setIsDownloading(true)
 
-        await downloadPodcast(program, id, fileName, progressCallback, () => {}, errorCallback);
+        await downloadPodcast(program, streamUrl, fileName, progressCallback, () => {}, errorCallback);
 
         setIsDownloading(false)
     }
