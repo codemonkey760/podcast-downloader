@@ -28,10 +28,6 @@ function getTitleRegexFileName(titleRegex, fileNamePattern, title, podcastId) {
 export function getFileName(program, podcastId, title, streamUrl) {
     const ext = getFileExtFromStreamUrl(streamUrl)
 
-    return getSimpleFileName(program, podcastId, title) + '.' + ext
-}
-
-export function getSimpleFileName(program, podcastId, title) {
     const mode = program.namingMode ?? NamingMode.NONE
 
     if (mode === NamingMode.NONE) {
